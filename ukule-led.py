@@ -2,7 +2,7 @@
 
 Usage:
     ukule-led play <file>
-    ukule-led practice <chord>
+    ukule-led practice <chord> [-b <brightness>]
 
 """
 
@@ -17,11 +17,14 @@ def main():
     ser = serial.Serial('/dev/cu.usbserial-A603V075', 9600)
 
     if arguments['practice']:
-        to_write = arguments['<chord>'] + ' 20\r\n'
-        print(to_write)
-        ser.write(to_write)
-        time.sleep(1)
+        brightness = '20'
+        if arguments['-b']:
+            brightness = arguments['<brightness>']
 
+        to_write = arguments['<chord>'] + ' ' + brightness + '\r\n'
+        ser.write(to_write)
+        
+    time.sleep(1)
     ser.close()
 
 if __name__ == '__main__':
