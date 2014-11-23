@@ -2,7 +2,7 @@
 
 Usage:
     ukule-led play <file>
-    ukule-led practice <chord> [-b <brightness>]
+    ukule-led practice <chord>
 
 """
 
@@ -14,15 +14,13 @@ def main():
 
     arguments = docopt.docopt(__doc__, version='Ukule-LED 0.1')
 
-    ser = serial.Serial('/dev/cu.usbserial-A603V075', 9600)
+    ser = serial.Serial('/dev/cu.usbserial-A603UYEE', 9600)
 
     if arguments['practice']:
-        brightness = '20'
-        if arguments['-b']:
-            brightness = arguments['<brightness>']
+        pass
 
-        to_write = arguments['<chord>'] + ' ' + brightness + '\r\n'
-        ser.write(to_write)
+    if arguments['play']:
+        ser.write(arguments['<file>'] + '\r\n')
         
     time.sleep(1)
     ser.close()
