@@ -14,7 +14,8 @@ def main():
 
     arguments = docopt.docopt(__doc__, version='TEST')
 
-    ser = serial.Serial('/dev/cu.usbserial-A603UZAB', 9600)
+    # ser = serial.Serial('/dev/cu.usbserial-A603UZAB', 9600)
+    ser = serial.Serial('COM8', 9600)
 
     if arguments['practice']:
         pass

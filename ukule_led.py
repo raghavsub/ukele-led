@@ -36,14 +36,14 @@ def file_to_str( filename ):
         return file_str 
 
 def main():
-    print chord_map['A#7']
+    # print chord_map['A#7']
     arguments = docopt.docopt(__doc__, version='Ukule-LED 0.2')
 
     serport = arguments['<portname>']
     ser = serial.Serial(serport, 9600)
 
     if arguments['practice']:
-        pass
+        ser.write(arguments['<chord>'] + '\r\n')
 
     if arguments['play']:
         song_str = file_to_str( arguments['<file>'] )
