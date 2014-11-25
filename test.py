@@ -1,8 +1,8 @@
-"""Ukule-LED.
+"""TEST
 
 Usage:
-    ukule-led play <file>
-    ukule-led practice <chord>
+    test play <file>
+    test practice <chord>
 
 """
 
@@ -12,7 +12,7 @@ import time
 
 def main():
 
-    arguments = docopt.docopt(__doc__, version='Ukule-LED TEST')
+    arguments = docopt.docopt(__doc__, version='TEST')
 
     ser = serial.Serial('/dev/cu.usbserial-A603UZAB', 9600)
 

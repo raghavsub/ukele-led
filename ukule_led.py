@@ -1,8 +1,8 @@
 """Ukule-LED.
 
 Usage:
-    ukule-led play <file> port <portname>
-    ukule-led practice <chord> port <portname>
+    ukule_led play <file> port <portname>
+    ukule_led practice <chord> port <portname>
 
 """
 
@@ -35,24 +35,22 @@ def file_to_str( filename ):
         print file_str
         return file_str 
 
-
 def main():
     print chord_map['A#7']
-    arguments = docopt.docopt(__doc__, version='Ukule-LED 0.1')
+    arguments = docopt.docopt(__doc__, version='Ukule-LED 0.2')
 
     serport = arguments['<portname>']
-    # ser = serial.Serial('/dev/cu.usbserial-A603UYEE', 9600)
-    # ser = serial.Serial(serport, 9600)
+    ser = serial.Serial(serport, 9600)
 
     if arguments['practice']:
         pass
 
     if arguments['play']:
         song_str = file_to_str( arguments['<file>'] )
-        # ser.write(song_str)
+        ser.write(song_str)
         
     time.sleep(1)
-    # ser.close()
+    ser.close()
 
 if __name__ == '__main__':
     main()
