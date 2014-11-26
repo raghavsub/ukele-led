@@ -1,2 +1,2 @@
-120 5
-|A B C D|E F G -|
+200 5
+|Am B C D|E F G -|

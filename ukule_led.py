@@ -43,11 +43,13 @@ def main():
     ser = serial.Serial(serport, 9600)
 
     if arguments['practice']:
-        ser.write(arguments['<chord>'] + '\r\n')
+        num = chord_map[ arguments['<chord>'] ]
+        num_str = '0' + str(num) if num < 10 else str(num)
+        ser.write( '1/' + num_str + '\r\n' )
 
     if arguments['play']:
         song_str = file_to_str( arguments['<file>'] )
-        ser.write(song_str)
+        ser.write( '2/' + song_str )
         
     time.sleep(1)
     ser.close()
