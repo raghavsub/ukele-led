@@ -22,7 +22,6 @@ def file_to_str( filename ):
         file_str = ""
         for line in f:
             strs = line.replace('|', ' ').split()
-            print strs
             for note in strs:
                 if note == '-':
                     lasti = len(file_str)
@@ -31,7 +30,7 @@ def file_to_str( filename ):
                     num = chord_map[note]
                     num_str = '0' + str(num) if num < 10 else str(num)
                     file_str += num_str + '/'
-        file_str = tempo + '/' + time + '/' + file_str + '-1\r\n'
+        file_str = tempo + '/' + time + '/' + file_str + '-1/\n'
         print file_str
         return file_str 
 
@@ -45,7 +44,8 @@ def main():
     if arguments['practice']:
         num = chord_map[ arguments['<chord>'] ]
         num_str = '0' + str(num) if num < 10 else str(num)
-        ser.write( '1/' + num_str + '\r\n' )
+        ser.write( '1/' + num_str + '/\n' )
+        print '1/' + num_str + '/\n'
 
     if arguments['play']:
         song_str = file_to_str( arguments['<file>'] )
