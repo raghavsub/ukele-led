@@ -90,7 +90,7 @@
         <p dir="ltr">placeholder text</p>
         <br>
         <div class="image">
-          <p class="c1 c25"><img src="webpage_files/placeholder.jpg" width="290" height="216"></p>
+          <p class="c1 c25"><img src="webpage_files/placeholder.jpg" width="300" height="200"></p>
           <p class="caption">placeholder caption</p>
         </div>
       </div>
@@ -100,7 +100,7 @@
         
         <p dir="ltr"><strong>Rationale and Inspiration</strong></p>
 
-        <p dir="ltr"><strong>Background Math</strong></p>
+        <p dir="ltr"><strong>Math</strong></p>
 
         <p dir="ltr"><strong>Logical Structure</strong></p>
 
@@ -117,6 +117,48 @@
 
       <div class="linklist"> <a name="hardware"></a>
         <h2>Hardware Design&nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+        <p>Our electronic components included an ATmega1284P microcontroller mounted on a custom PCB and 16 WS2812B RGB LEDs. These were soldered to a small solder board, along with various resistors, capacitors, jumper wires, and 6 header pins for connecting to a serial cable.</p>
+
+        <p><strong>ATmega1284P Microcontroller</strong></p>
+
+        <p>We originally decided to use the 1284P because we wanted to use Timer 3's fast PWM mode to drive our RGB LEDs. When we realized that we couldn't quite meet the LED timing specifications, we no longer needed to use the 1284P.</p>
+
+        <p>However, we decided to stick with the 1284P for convenience. We already had a custom PCB built, which included all of the necessary power circuits. We also avoided having to learn a new microcontroller datasheet.</p>
+
+        <p><strong>WS2812B RGB LEDs</strong></p>
+
+        <p>We used Adafruit's NeoPixel Mini PCBs, each of which includes a WS2812B RGB LED and the necessary capacitor, as given in the WS2812B datasheet. We decided to use the PCBs instead of directly using the LEDs to make soldering easier.</p>
+
+        <p>All of the RGB LEDs are driven from a single microcontroller I/O pin. As per the datasheet, they were all connected in series, with the Dout, 5V, and gnd pads of one wired to the Din, 5V, and gnd pads of the next. The Din pin of the first LED is connected to PORTA.0 on the microcontroller through a 330 ohm resistor to protect the first LED from any voltage spike, and the Dout pin of the last LED is not connected to anything. There is a 100 uF capacitor between the 5V and gnd lines, used to prevent large inrush currents from destroying </p>
+
+        <p>Soldering the LEDs together is the most challenging part of building the Ukule-LED hardware. There should be four groups of four NeoPixel PCBs. The Din, Dout, 5V, and gnd pins of each group need to connected as described in the previous paragraph. We used very short lengths of wire, soldered to the pads on the NeoPixel PCBs, such that there was about 1-2 mm of space between each PCB. Next, these four groups need to be wired together. We used 3 approximately 4 cm lengths of wire to connect these. Finally, all 16 NeoPixel PCBs were to be hooked to the solder board with 3 approximately 50 cm lengths of wire. The LED configuration is shown in Figure <strong>X</strong>.</p>
+
+        <div class="image">
+          <p class = "c1 c25"><img src="webpage_files/placeholder.jpg" alt="" width="300" height="200"></a></p>
+          <p class="caption">placeholder caption</p>
+        </div>
+
+        <p><strong>Serial Connection</strong></p>
+
+        <p>We used a UART-to-USB cable to enable communication between the host PC and the microcontroller. The user specifies a song file path, then the Python CLI converts this file into a string and sends it through the cable to the microcontroller.</p>
+
+        <p><strong>Power</strong></p>
+
+        <p>According to the <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/power">power</a> section of the Adafruit NeoPixel Überguide, each RGB LED driven at maximum brightness consumes 60 mA of current, resulting in a total current draw of 960 mA for 24 RGB LEDs.However, we drove a maximum of 4 LEDs at a time, with the macro <code>INTENS</code> to 20, out of a maximum value of 256. A back-of-the-envelope calculation gives approximately 18.75 mA of current, which is well below the absolute maximum DC current of 40 mA, given in the microcontroller's datasheet. As such, we decided that we could drive the RGB LEDs with a microcontroller pin, instead of resorting to an external power source as the Überguide suggested. We had no trouble with this.</p>
+
+        <p>We were able to use a single 9V power supply for all of our power needs. We decided against using a 9V battery because the system has to be tethered to a computer via serial cable anyways, and another cable coming out of the system is not a major inconvenience at that point.</p>
+
+        <p><strong>Ukulele</strong></p>
+
+        <p>To prepare the ukulele for our project, we had to dremel out the fretboard up to the fourth fret in to accomodate the RGB LEDs. We had to keep all the frets intact and keep the LEDs below the frets in order to maintain playability of the ukulele. We considered using epoxy to make the fretboard above the LEDs smooth, but we were worried that we wouldn't be able to keep the epoxy contained.</p>
+
+        <p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure <strong>X</strong>. Overall, we didn't add too much mass to the ukulele.</p>
+
+        <div class="image">
+          <p class = "c1 c25"><img src="webpage_files/placeholder.jpg" alt="" width="300" height="200"></a></p>
+          <p class="caption">placeholder caption</p>
+        </div>
         
       </div>
       
@@ -150,9 +192,14 @@
 
       </div>
 
-        <h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+      <h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
         <h3>A. Schematics</h3>
-        <p><a href="webpage_files/schematics.jpg"><img src="webpage_files/schematics.jpg" alt="" width="607" height="458"></a></p>
+        <div class="image">
+          <p class = "c1 c25"><img src="webpage_files/schematic_highlevel.jpg" alt="" width="600" height="270"></a></p>
+          <p class="caption">High-Level Hardware Schematic</p>
+        </div>
+
         <h3>B. Cost Details</h3>
         <div dir="ltr">
           <table width="769" cellpadding="0" cellspacing="0">
@@ -165,7 +212,7 @@
                 <td width="116" class="c16"><p class="c23 c1"><span class="c5">Total Cost</span></p></td>
               </tr>
               <tr class="c9">
-                <td class="c22"><p class="c1"><span>ATMega1284</span></p></td>
+                <td class="c22"><p class="c1"><span>ATmega1284P</span></p></td>
                 <td class="c13"><p class="c1"><span>Lab stock</span></p></td>
                 <td class="c33"><p class="c1"><span>1</span></p></td>
                 <td class="c3"><p class="c1"><span>$5</span></p></td>
@@ -258,60 +305,40 @@
             </tbody>
           </table>
         </div>
-<h3>C. Distribution of Work</h3>
-         <table width="100%" border="1">
+
+        <h3>C. Distribution of Work</h3>
+        <table width="100%" border="1">
           <thead>
             <tr>
-              <th width="50%"><strong>Shane Soh</strong></th>
-              <th width="50%"><strong>Eileen Liu</strong></th>
+              <th width="50%"><strong>Raghav Subramaniam</strong></th>
+              <th width="50%"><strong>Jeff Tian</strong></th>
             </tr>
           </thead>
           <tbody>
             <tr class="row1">
-              <td>Overall Hardware Design</td>
-              <td>Overall Software Design</td>
-            </tr>
-            <tr class="row1">
-              <td>ADC Integration</td>
-              <td>Wayfinding Logic</td>
+              <td>placeholder</td>
+              <td>placeholder</td>
             </tr>
             <tr class="row2">
-            <td>Prototype Construction/Assembly</td>
-             <td>Prototype Construction/Assembly</td>
+              <td>placeholder</td>
+              <td>placeholder</td>
             </tr>
-            <tr class="row1">
-            <td>Website</td>
-             <td>Website</td>
-            </tr>
-            <tr class="row2">
-            <td height="17">Final Prototype Testing</td>
-             <td>Hardware Schematics</td>
-            </tr>
-            </tbody>
-            </table>
-         <h3>D. Code Listing</h3>
-         <p>code  available upon request<a href="webpage_files/trtSettings.h"><br>
-           trtSettings.h</a><a href="webpage_files/trtkernel_1284.c"><br>
-           trtkernel_1284.c
-           </a></p>
-         <div class="linklist">
-           <h2>References &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+          </tbody>
+        </table>
+
+        <h3>D. Code Listing</h3>
+        <p>placeholder</p>
+
+        <div class="linklist"><h2>References &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
         <p style="margin: 0 0 0.5em">This section provides links to external reference documents, code, and websites used throughout the project.</p>
         <div class="group1">
           <h3>Datasheets</h3>
           <ul>
             <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/AtmelStuff/mega1284full.pdf">Atmega1284 Datasheet</a></li>
-            <li><a href="http://www.adafruit.com/products/1201#Technical_Details">Vibrating Mini  Motors</a></li>
-            <li><a href="http://www.maxbotix.com/documents/MB1000_Datasheet.pdf">Maxbotix MB1000 Ultrasonic Range Finder Datasheet</a></li>
           </ul>
           <h3>References</h3>
           <ul>
-            <li><a href="http://maxembedded.com/2011/06/20/the-adc-of-the-avr/">maxEmbedded.com AVR ADC Tutorial</a></li>
-            <li><a href="http://www.atmel.com/dyn/resources/prod_documents/doc2521.pdf">AVR Hardware Design Considerations</a></li>
-            <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
-            <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TinyRealTime modified for mega1284</a></li>
-            <li><a href="http://people.ece.cornell.edu/land/PROJECTS/ProtoBoard476/">Mega644/1284 Prototype Board</a></li>
-            <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/analogDigital/index_644_GCC.html">A/D and D/A on mega644/1284</a></li>
           </ul>
         </div>
         <div class="group2">
@@ -322,10 +349,6 @@
           </ul>
           <h3>Background Info</h3>
           <ul>
-          <li><a href="http://www.robotica-up.org/PDF/Wearable4Blind.pdf">Wearable Assistive Devices for the Blind</a></li>
-          <li><a href="http://hackaday.com/2012/09/05/can-a-robot-be-a-safe-and-cost-effective-alternative-to-guide-dogs/">hackaday: Can a Robot be a Safe and Cost Effective Alternative to Guide Dogs?</a></li>
-          <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/FinalProjects/s2009/rs423_jsb89/rs423_jsb89/rs423_jsb89_Ultrasonic_Haptic_Vision.html">ECE 4760 Spring 09 Project: Ultrasonic Haptic Vision</a></li>
-
           </ul>
         </div>
 </div>
@@ -336,8 +359,7 @@
         <div class="linklist">
           <h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
-        <p>We thank Professor Bruce Land for his wealth of knowledge and the lab TAs for the debugging help they provided this semester.</p>
-        <p>We would also like to thank Texas Instruments and FreeScale for sending us sample components, even though they were not implemented in our final prototype.      </p>
+          <p>placeholder text</p>
         </div>
       </div>
     <!-- end maincontent -->
