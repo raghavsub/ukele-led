@@ -74,7 +74,6 @@ with open('header_tmp.txt', 'a') as f:
     if arguments['<4>'] == '4':
         bools[12] = True
 
-
     line += '{'
     for i, b in enumerate(bools):
         if b is True:
