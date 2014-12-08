@@ -111,9 +111,13 @@
 
 				<p dir="ltr"><strong>Math</strong></p>
 
+        <p>The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided by the user. To set OCR3A, we used the formula: <code>period = (62500 * 60) / tempo - 1</code>
+        </p>
 				<p dir="ltr"><strong>Logical Structure</strong></p>
-
+        <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
+        </p>
 				<p dir="ltr"><strong>Hardware Tradeoffs</strong></p>
+        <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel. We decided to use the series method because of the simplicity and </p>
 
 				<p dir="ltr"><strong>Software Tradeoffs</strong></p>
 
