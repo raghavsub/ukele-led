@@ -87,7 +87,11 @@
 					<p class="quote">"A modified ukulele that uses lights to teach you how to play chords and songs."</p>
 					<p class="source">project soundbyte</p>
 				</div>
-				<p dir="ltr">placeholder text</p>
+
+				<p>ukule-LED is a ukulele with LEDs embedded in its fretboard. These LEDs can light up in configurations corresponding to different chords, which can aid the ukulele player in learning how to play certain chords, or can act as a chord reference for a more advanced player. ukule-LED has two modes of operations. First, in "play" mode, the user can feed the system a song file, a text file that contains the tempo, time signature, and an ordered listing of the chords in a song. The ukulele will light up the correct chords at the correct times in the song. In "practice" mode, the user can specify a single chord, which is lit up indefinitely.</p>
+
+        <p>ukule-LED is made up of two major components. First is the ukulele itself. We use sixteen RGB LEDs, embedded in the fretboard before the first four frets on each string. These LEDs are wired to the microcontroller, which is mounted on the ukulele itself. The ukulele is wired to a PC, which runs a companion program with a command line interface. From this interface, the user can put the device in "play" mode and specify a path to a song file, or put the device in "practice" mode and specify a chord name.</p>
+
 				<br>
 				<div class="image">
 					<p class="c1 c25"><img src="webpage_files/placeholder.jpg" width="300" height="200"></p>
@@ -403,7 +407,10 @@
 				  	<h3>References</h3>
 				  	<ul>
 				  		<li><a href="http//learn.adafruit.com/adafruit-neopixel-uberguide">Adafruit NeoPixel Überguide</a></li>
-				  		<li><a href="http://bleaklow.com/2012/12/02/driving_the_ws2811_at_800khz_with_a_16mhz_avr.html">Alan Burlison's WS2812 Driver</a></li>
+				  		<li><a href="http://bleaklow.com/2012/12/02/driving_the_ws2811_at_800khz_with_a_16mhz_avr.html">Alan Burlison's WS2811 Driver</a> (<a href="http://sourceforge.net/p/abavr/lib/ci/e3429e3493e08015d94d9237699bf15c085970c7/tree/WS2811/WS2811.h">SourceForge</a>)</li>
+              <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
+              <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TRT for ATmega1284</a></li>
+              <li><a href="http://people.ece.cornell.edu/land/PROJECTS/ProtoBoard476/">Custom PCB for ATmega1284</a></li>
 				  	</ul>
 				  </div>
 				  <div class="group2">
