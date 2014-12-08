@@ -97,10 +97,17 @@
 			
 			<div class="linklist"><a name="design"></a>
 				<h2>High Level Design &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+        <div class="image">
+          <p class = "c1 c25"><img src="webpage_files/overview.jpg" alt="" width="500" height="300"></a></p>
+          <p class="caption">Figure 1: High Level Project Structure</p>
+        </div>
 				
 				<p dir="ltr"><strong>Inspiration and Rationale</strong></p>
 
 				<p>Our inspiration for this project comes from a variety of sources. Our idea to upgrade a musical instrument using LEDs comes from various Hackaday articles, including <a href="http://hackaday.com/2014/08/26/gemma-powered-neopixel-sound-reactive-drums/">this</a> one. We considered using LEDs to augment a couple of other instruments, including a keyboard and a guitar, before settling on a ukulele. We were also inspired by the popular <a href="http://en.wikipedia.org/wiki/Guitar_Hero">Guitar Hero</a> video game series.</p>
+        <p>We believe that musical education is an essential part of the human experience, and we were looking at ways in which the experience of learning to play an instrument could be improved. One thing we noticed is that a difficult part of the learning process for beginners is to memorize all of the different finger positions corresponding to the various chords of their respective instruments.</p>
+        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets  </p>
 
 				<p dir="ltr"><strong>Math</strong></p>
 
@@ -120,12 +127,15 @@
 					<p class="caption">Figure 2: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
 				</div>
         <p><strong>Command Line Interface</strong></p>
-        <p>To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode, where the LEDs for a single chord are held on indefinitely (until the user specifies a different chord in practice mode or switches to play mode). The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into practice mode, which plays the specified song by lighting the LEDs corresponding to the song chords sequentially according to the chord duration. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.</p>
+        <p>
+          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode, where the LEDs for a single chord are held on indefinitely (until the user specifies a different chord in practice mode or switches to play mode). The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into practice mode, which plays the specified song by lighting the LEDs corresponding to the song chords sequentially according to the chord duration. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
+        </p>
         </p> <p>
-          To implement this functionality we used the python library docopt, which allows us to easily define different command types and parse the command line arguments
+          To implement this functionality we used the python library docopt, which allows us to easily define different command types, sanity check the user's command line input, and parse the command line arguments.
         </p> 
 				<p><strong>Music File Parsing</strong></p>
-				<p>To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. The first command tells the microcontroller to go into practice mode, where the LEDs for a single chord are held on indefinitely (until the user specifies a different chord in practice mode or switches to play mode). The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.
+				<p>
+          If the user specifies play mode, 
 				</p> 
 				<p><strong>File Serial Transmission</strong></p>
 				<p><strong>Initialization</strong></p>
@@ -362,8 +372,8 @@
 					</thead>
 					<tbody>
 						<tr class="row1">
-							<td>Hardware Design</td>
-							<td>Softare Design</td>
+							<td>Overall Hardware Design</td>
+							<td>Overall Softare Design</td>
 						</tr>
 						<tr class="row2">
 							<td>LED and Board Soldering</td>
@@ -371,15 +381,15 @@
 						</tr>
             <tr class="row1">
               <td>Song File Format Design</td>
-              <td>Song Parsing Python Script</td>
+              <td>Song Parsing Python Frontend</td>
             </tr>
             <tr class="row2">
-              <td>C Chord Lookup Table</td>
-              <td>Python Chord Lookup Table</td>
+              <td>C Chord Lookup Table Generation Script</td>
+              <td>Data Transmit Encoding/Decoding</td>
             </tr>
             <tr class="row1">
-              <td>C Code Implementation</td>
-              <td>C Code Implementation</td>
+              <td>Main C Code Implementation</td>
+              <td>Main C Code Implementation</td>
             </tr>
             <tr class="row2">
               <td>Website</td>
