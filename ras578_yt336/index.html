@@ -121,9 +121,12 @@
         <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
         </p>
 				<p dir="ltr"><strong>Hardware Tradeoffs</strong></p>
-        <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel. We decided to use the series method because of the simplicity and </p>
+        <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel. We decided to use the series method because of the simplicity and compatibility with our drivers.</p>
 
 				<p dir="ltr"><strong>Software Tradeoffs</strong></p>
+        <p>
+          In terms of software, a big problem we ran into initially was driving the lights. The lights are driven by a very precisely timed pwm wave. We at first attempted to generate this pwm signal ourselves using the same technique as in lab 2, but we soon realized that the timing specifications were too precise and our MCU could not meet the timing specifications due to time constraints and ISRs.
+        </p>
 
 			</div>
 		 
@@ -143,7 +146,7 @@
         </p> 
 				<p><strong>Music File Parsing</strong></p>
 				<p>
-          If the user specifies play mode, 
+          If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed.
 				</p> 
 				<p><strong>File Serial Transmission</strong></p>
 				<p><strong>Initialization</strong></p>
