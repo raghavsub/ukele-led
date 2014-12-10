@@ -114,11 +114,11 @@
 
 				<p>Our inspiration for this project comes from a variety of sources. Our idea to upgrade a musical instrument using LEDs comes from various Hackaday articles, including <a href="http://hackaday.com/2014/08/26/gemma-powered-neopixel-sound-reactive-drums/">this</a> one. We considered using LEDs to augment a couple of other instruments, including a keyboard and a guitar, before settling on a ukulele. We were also inspired by the popular <a href="http://en.wikipedia.org/wiki/Guitar_Hero">Guitar Hero</a> video game series.</p>
         <p>We believe that musical education is an essential part of the human experience, and we were looking at ways in which the experience of learning to play an instrument could be improved. One thing we noticed is that a difficult part of the learning process for beginners is to memorize all of the different finger positions corresponding to the various chords of their respective instruments.</p>
-        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets  </p>
+        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets or trying to memorize all of them at once. </p>
 
 				<p dir="ltr"><strong>Math</strong></p>
 
-        <p>The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided by the user. To set OCR3A, we used the formula: <code>period = (62500 * 60) / tempo - 1</code>
+        <p>The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided by the user. To set OCR3A, we used the formula: <code>period = (62500 * 60) / tempo - 1</code>. 
         </p>
 				<p dir="ltr"><strong>Logical Structure</strong></p>
         <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
@@ -149,8 +149,14 @@
         </p> 
 				<p><strong>Music File Parsing</strong></p>
 				<p>
-          If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed.
-				</p> 
+          If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed. Below is an example of a song file:</p><p>
+          <code>240 4<br>
+          |A B C D|E F G -|A - - B|<br>
+          |A - Bbm A7|Bm X A#7 -|A - X D|</code>
+				</p>
+        <p>
+          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). 
+        </p>
 				<p><strong>File Serial Transmission</strong></p>
 				<p><strong>Initialization</strong></p>
 				<p><strong>TRT and Scheduling</strong></p>
