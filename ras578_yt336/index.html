@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="webpage_files/main.css">
 <meta name="author" content="Raghav Subramaniam, Jeff Tian">
 <meta name="copyright" content="Copyright (c) 2014 Raghav Subramaniam, Jeff Tian">
-<meta name="description" content="ECE 4760 Final Project: Ukule-LED">
+<meta name="description" content="ECE 4760 Final Project: ukule-LED">
 <meta name="keywords" content="">
 <style type="text/css">
 .c1 {line-height:1.0;direction:ltr}
@@ -83,6 +83,12 @@
 		<div id="maincontent" class="hub">
 		
 			<div id="introblurb">
+
+				<div class="image">
+					<p class="c1 c25"><img src="webpage_files/banner.jpg" width="740" height="315"></p>
+					<p class="caption">Obligatory Glamor Shot</p>
+				</div>
+
 				<div id="pullquote">
 					<p class="quote">"A modified ukulele that uses lights to teach you how to play chords and songs."</p>
 					<p class="source">project soundbyte</p>
@@ -93,10 +99,7 @@
         <p>ukule-LED is made up of two major components. First is the ukulele itself. We use sixteen RGB LEDs, embedded in the fretboard before the first four frets on each string. These LEDs are wired to the microcontroller, which is mounted on the ukulele itself. The ukulele is wired to a PC, which runs a companion program with a command line interface. From this interface, the user can put the device in "play" mode and specify a path to a song file, or put the device in "practice" mode and specify a chord name.</p>
 
 				<br>
-				<div class="image">
-					<p class="c1 c25"><img src="webpage_files/placeholder.jpg" width="300" height="200"></p>
-					<p class="caption">placeholder caption</p>
-				</div>
+
 			</div>
 			
 			<div class="linklist"><a name="design"></a>
@@ -175,12 +178,7 @@
 
 				<p>All of the RGB LEDs are driven from a single microcontroller I/O pin. As per the datasheet, they were all connected in series, with the Dout, 5V, and gnd pads of one wired to the Din, 5V, and gnd pads of the next. The Din pin of the first LED is connected to PORTA.0 on the microcontroller through a 330 ohm resistor to protect the first LED from any voltage spike, and the Dout pin of the last LED is not connected to anything. There is a 100 uF capacitor between the 5V and gnd lines, used to prevent large inrush currents from destroying </p>
 
-				<p>Soldering the RGB LEDs together is the most challenging part of building the ukule-LED hardware. There should be four groups of four NeoPixel PCBs. The Din, Dout, 5V, and gnd pins of each group need to connected as described in the previous paragraph. We used very short lengths of wire, soldered to the pads on the NeoPixel PCBs, such that there was about 1-2 mm of space between each PCB. Next, these four groups need to be wired together. We used 3 approximately 4 cm lengths of wire to connect these. Finally, all 16 NeoPixel PCBs were to be hooked to the solder board with 3 approximately 50 cm lengths of wire. The LED configuration is shown in Figure <strong>X</strong>.</p>
-
-				<div class="image">
-					<p class = "c1 c25"><img src="webpage_files/placeholder.jpg" alt="" width="300" height="200"></a></p>
-					<p class="caption">placeholder caption</p>
-				</div>
+				<p>Soldering the RGB LEDs together is the most challenging part of building the ukule-LED hardware. There should be four groups of four NeoPixel PCBs. The Din, Dout, 5V, and gnd pins of each group need to connected as described in the previous paragraph. We used very short lengths of wire, soldered to the pads on the NeoPixel PCBs, such that there was about 1-2 mm of space between each PCB. Next, these four groups need to be wired together. We used 3 approximately 4 cm lengths of wire to connect these. Finally, all 16 NeoPixel PCBs were to be hooked to the solder board with 3 approximately 50 cm lengths of wire.
 
 				<p><strong>Serial Connection</strong></p>
 
@@ -199,8 +197,8 @@
 				<p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure <strong>X</strong>. Overall, we didn't add too much mass to the ukulele.</p>
 
 				<div class="image">
-					<p class = "c1 c25"><img src="webpage_files/placeholder.jpg" alt="" width="300" height="200"></a></p>
-					<p class="caption">placeholder caption</p>
+					<p class = "c1 c25"><img src="webpage_files/electronics.jpg" alt="" width="436" height="291"></a></p>
+					<p class="caption">Figure <strong>X</strong>. The microcontroller board and the solder board.</p>
 				</div>
 				
 			</div>
@@ -428,6 +426,8 @@
               <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
               <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TRT for ATmega1284</a></li>
               <li><a href="http://people.ece.cornell.edu/land/PROJECTS/ProtoBoard476/">Custom PCB for ATmega1284</a></li>
+              <li><a href="http://pyserial.sourceforge.net/">PySerial</a></li>
+              <li><a href="http://docopt.org">docopt</a></li>
 				  	</ul>
 				  </div>
 				  <div class="group2">
@@ -435,10 +435,6 @@
 				  	<ul>
 				  		<li><a href="http://www.adafruit.com">Adafruit</a></li>
 				  		<li><a href="http://www.amazon.com">Amazon</a></li>
-				  	</ul>
-				  	<h3>Background Info</h3>
-				  	<ul>
-				  		<li><a href="http://hackaday.com/2014/08/26/gemma-powered-neopixel-sound-reactive-drums">Sound Reactive Drums</a></li>
 				  	</ul>
 				  </div>
         </div>
