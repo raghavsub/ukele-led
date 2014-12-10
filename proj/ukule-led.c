@@ -100,7 +100,7 @@ void serialComm(void* args) {
 	{
 		//fscanf(stdin, "%s", cmd);
 		
-gets(cmd);
+        gets(cmd);
 		trtWait(SEM_STRING_DONE);
 
 		/*if (cmd[0] == 'f') {

@@ -173,9 +173,17 @@
 
         <p>For play mode, after the leading "2" the second number provided is the tempo, and third is the beats per measure, which are 200 and 4 in the example respectively. The next numbers are the chords of the song in sequential order. There are indefinitely many of them, and the list is terminated by a -1. Using Pyserial, the script then opens a connection to the port provided as a command line argument by the user, and writes the serialized string to the port.</p>
         <p><strong>Initialization</strong></p>
+        <p>
+          On the MCU side of things, we start of with a <code>main(void)</code> function that runs once to initialize everything when the program first starts. First, it sets up the Neopixel driver by registering portA to be the port it will communicate over and setting the data direction DDRA of the port to output. Next, it sets up timer3 as the timer that drives the timed transitions between chords by setting the prescalar to 256, setting a default value to OCR3A which will be overwritten later, and enabling the timer3 interrupt.</p>
+        <p>
+          Next, it does the setup for TRT, by initializing it, setting up standard in and out, allocating space for the idle task stack, and setting up the two standard semaphores <code>SEM_RX_ISR_SIGNAL</code> and <code>SEM_STRING_DONE</code> which allow for tasks running on TRT to receive from standard input. It then creates our two real-time tasks on TRT, after which it enables sleeping and goes into an infinite sleep loop because it will not be needed again.
+        </p>  
 				<p><strong>Receiving From Serial Port</strong></p>
-        <p><strong>TRT and Scheduling</strong></p>
+        <p>
+          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>.
+        </p>  
 				<p><strong>Real-time LED Driving</strong></p>
+        <p><strong>TRT and Scheduling</strong></p>
 				<p><strong>Chord Lookup Table Generation</strong></p>
 
 
