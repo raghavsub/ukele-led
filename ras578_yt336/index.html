@@ -155,7 +155,7 @@
         </p> <p>
           To implement this functionality we used the python library docopt, which allows us to easily define different command types, sanity check the user's command line input, and parse the command line arguments.
         </p> 
-				<p><strong>Music File Parsing</strong></p>
+				<p><strong>Music File</strong></p>
 				<p>
           If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed. Below is an example of a song file:</p><p>
           <code>240 4<br>
@@ -166,12 +166,15 @@
           So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). 
         </p>
         <p>
-          The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. 
+          The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. There can be an arbitrary number of measures, broken up into however many lines the user wants. We support major, minor, and seventh chords, on the standard octave along with sharps and flats. A - signifies to hold a previous chord on for another beat, and an X means no chord should be displayed.
         </p>
-				<p><strong>File Serial Transmission</strong></p>
-				<p><strong>Initialization</strong></p>
-				<p><strong>TRT and Scheduling</strong></p>
+				<p><strong>File Parsing and Serial Transmission</strong></p>
+        <p>When the Python script receives a command from the user, it uses docopt to parse the command arguments and determines the command. We serialize our command and data using a string of numbers delimited by the / character. To parse the song file, the script uses the standard IO library built in for Python to read the file, and the string library to do sanity checks and extract the file contents into memory. We developed an encoding that assigns each chord a unique number starting from 1, and the script scans over the chords in the song file and converts them to the numbers based on a map we provide. </p><p>The data is then converted into a string so that it can be serialized and sent over the serial connection. An example string we might send to put the program in practice mode is <code>"1/17"</code>, and an example string for play mode is <code>"2/200/4/14/13/02/30/-1"</code>. The first number sent is a flag to denote practice mode (1), or play mode (2). Practice mode is simple, the only information after the "1" needed is the number for the single chord to be held on. </p>
+
+        <p>For play mode, after the leading "2" the second number provided is the tempo, and third is the beats per measure, which are 200 and 4 in the example respectively. The next numbers are the chords of the song in sequential order. There are indefinitely many of them, and the list is terminated by a -1. Using Pyserial, the script then opens a connection to the port provided as a command line argument by the user, and writes the serialized string to the port.</p>
+        <p><strong>Initialization</strong></p>
 				<p><strong>Receiving From Serial Port</strong></p>
+        <p><strong>TRT and Scheduling</strong></p>
 				<p><strong>Real-time LED Driving</strong></p>
 				<p><strong>Chord Lookup Table Generation</strong></p>
 
