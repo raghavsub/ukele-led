@@ -31,7 +31,7 @@ def file_to_str( filename ):
                     num_str = '0' + str(num) if num < 10 else str(num)
                     file_str += num_str + '/'
         file_str = tempo + '/' + time + '/' + file_str + '-1/\n'
-        print file_str
+        #print file_str
         return file_str 
 
 def main():
@@ -45,7 +45,7 @@ def main():
         num = chord_map[ arguments['<chord>'] ]
         num_str = '0' + str(num) if num < 10 else str(num)
         ser.write( '1/' + num_str + '/\n' )
-        print '1/' + num_str + '/\n'
+        #print '1/' + num_str + '/\n'
 
     if arguments['play']:
         song_str = file_to_str( arguments['<file>'] )

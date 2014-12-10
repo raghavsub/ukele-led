@@ -86,7 +86,7 @@
 
 				<div class="image">
 					<p class="c1 c25"><img src="webpage_files/banner.jpg" width="740" height="315"></p>
-					<p class="caption">Obligatory Glamor Shot</p>
+					<p class="caption">Figure 1: Obligatory Glamor Shot</p>
 				</div>
 
 				<div id="pullquote">
@@ -107,22 +107,37 @@
 
         <div class="image">
           <p class = "c1 c25"><img src="webpage_files/overview.jpg" alt="" width="500" height="300"></a></p>
-          <p class="caption">Figure 1: High Level Project Structure</p>
+          <p class="caption">Figure 2: High Level Project Structure</p>
         </div>
 				
 				<p dir="ltr"><strong>Inspiration and Rationale</strong></p>
 
 				<p>Our inspiration for this project comes from a variety of sources. Our idea to upgrade a musical instrument using LEDs comes from various Hackaday articles, including <a href="http://hackaday.com/2014/08/26/gemma-powered-neopixel-sound-reactive-drums/">this</a> one. We considered using LEDs to augment a couple of other instruments, including a keyboard and a guitar, before settling on a ukulele. We were also inspired by the popular <a href="http://en.wikipedia.org/wiki/Guitar_Hero">Guitar Hero</a> video game series.</p>
         <p>We believe that musical education is an essential part of the human experience, and we were looking at ways in which the experience of learning to play an instrument could be improved. One thing we noticed is that a difficult part of the learning process for beginners is to memorize all of the different finger positions corresponding to the various chords of their respective instruments.</p>
-        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets  </p>
+        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets or trying to memorize all of them at once. </p>
 
 				<p dir="ltr"><strong>Math</strong></p>
 
+        <p>Our project required precise real-time timing to make sure the right chords were displayed on the LEDs according to the tempo specified by the user. The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided in the song file. 
+          </p><p>
+          We used the timer 3 ISR to do the timming for the song. We set the prescalar to 256, which means that the clock ticks once every <code>256/16000000</code> seconds. Thus, we have <code>256/16000000 = 62500</code> ticks per second. The user provides the <code>tempo</code> in beats per minute (bpm), so to convert this into a value OCR3A we calculated: <code>(1 min/tempo beats) * (60 sec/min) * (62500 ticks/sec)</code> and then subtracted 1 from this value because according to the datasheet the microcontroller uses <code>TOP+1</code> as its top trigger value for the clock ISR. </p><p>Thus we obtain our formula: <code>period = (62500 * 60) / tempo - 1</code>. So whenever the user specifies a <code>tempo</code>, we apply this formula and set OCR3A to the result.
+        </p>
 				<p dir="ltr"><strong>Logical Structure</strong></p>
-
+        <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
+        </p>
+        <p>
+          On the MCU side of things, we run two real-time tasks using TRT. One of them listens on <code>STDIN</code> for the user to input a new command on the CLI. When a command does arrive, it proceeds to determine which of the two modes was specified by the user, practice mode or play mode. In practice mode, the LEDs for a single chord are held on indefinitely, until the user specifies a different chord in practice mode or switches to play mode. In play mode, the microcontroller plays the song from a song file by lighting the LEDs corresponding to the song chords sequentially according to the chord duration provided in the song file. Depending on which mode is expected, this task will deserialize the rest of the data accordingly. In particular the command is for play mode then the task parses and interprets the serialized version of the song, stores it into local memory, and sets up the ISR according to the required tempo.
+        </p>
+        <p>
+          After the aforementioned task parses the serialized input and sets everything up, the ISR will fire periodically and every time it will increment a pointer into a song array which indicates which cord is the one that should currently be played. Another real-time task constantly polls this pointer value and drives the LEDs according to the pattern corresponding to the current chord.
+        </p>
 				<p dir="ltr"><strong>Hardware Tradeoffs</strong></p>
+        <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel (for example four LEDs per port). The benefits to putting the LEDs in parallel would have been that there would be more voltage available to power each LED, and that a broken connection early in the line would not cause the failure of all subsequent LEDs. </p><p>We decided to use the series method for a few different reasons. First, it maximizes simplicity of our code and compatibility with driver, which assumes all LEDs connected in serial connected to a single port. Next, we found that one port offered sufficient power to drive all sixteen LEDs in series without any noticible drop in brightness. Finally, we decided that our soldering job seemed pretty stable and that connecting the lights in parallel to multiple ports would introduce too many new wires and disrupt the aesthetics and user experience for the project.</p>
 
 				<p dir="ltr"><strong>Software Tradeoffs</strong></p>
+        <p>
+          In terms of software, a big problem we ran into initially was driving the lights. The lights are driven by a very precisely timed pwm wave. We at first attempted to generate this pwm signal ourselves using the same technique as in lab 2, but we soon realized that the timing specifications were too precise and our MCU could not meet them. Following the specifications of WS2812 Datasheet linked in the References section, the various overflow thresholds would need to be changed every few hundred nanoseconds or so, which would almost surely been impossible to do from a standalone C program let alone one running in conjunction with the time overheads caused by TRT and context switching. The reference article linked along with Alan Burlison's WS2811 Driver explains in detail the virtual infeasibility of this task using C code running on a 16MHz AVR. </p><p>After realizing this and doing some research, we found Burlison's WS2811 Driver, which achieves the strict specifications using very precise pulse-timing no-op delays in assembly. Utilizing this driver, we were able to successfully drive the LEDs and move onto the next phase of the project.
+        </p>
 
 			</div>
 		 
@@ -135,15 +150,24 @@
 				</div>
         <p><strong>Command Line Interface</strong></p>
         <p>
-          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode, where the LEDs for a single chord are held on indefinitely (until the user specifies a different chord in practice mode or switches to play mode). The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into practice mode, which plays the specified song by lighting the LEDs corresponding to the song chords sequentially according to the chord duration. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
+          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode. The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into play mode. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
         </p>
         </p> <p>
           To implement this functionality we used the python library docopt, which allows us to easily define different command types, sanity check the user's command line input, and parse the command line arguments.
         </p> 
 				<p><strong>Music File Parsing</strong></p>
 				<p>
-          If the user specifies play mode, 
-				</p> 
+          If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed. Below is an example of a song file:</p><p>
+          <code>240 4<br>
+          |A B C D|E F G -|A - - B|<br>
+          |A - Bbm A7|Bm X A#7 -|A - X D|</code>
+				</p>
+        <p>
+          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). 
+        </p>
+        <p>
+          The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. 
+        </p>
 				<p><strong>File Serial Transmission</strong></p>
 				<p><strong>Initialization</strong></p>
 				<p><strong>TRT and Scheduling</strong></p>
@@ -249,6 +273,7 @@
 				<p dir="ltr"><strong>Legal Considerations</strong></p>
 
 			</div>
+
 
 			<h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
@@ -414,7 +439,7 @@
 				  	</ul>
 				  	<h3>References</h3>
 				  	<ul>
-				  		<li><a href="http//learn.adafruit.com/adafruit-neopixel-uberguide">Adafruit NeoPixel Überguide</a></li>
+				  		<li><a href="http://learn.adafruit.com/adafruit-neopixel-uberguide">Adafruit NeoPixel Überguide</a></li>
 				  		<li><a href="http://bleaklow.com/2012/12/02/driving_the_ws2811_at_800khz_with_a_16mhz_avr.html">Alan Burlison's WS2811 Driver</a> (<a href="http://sourceforge.net/p/abavr/lib/ci/e3429e3493e08015d94d9237699bf15c085970c7/tree/WS2811/WS2811.h">SourceForge</a>)</li>
               <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
               <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TRT for ATmega1284</a></li>
@@ -432,14 +457,20 @@
 				  </div>
         </div>
 
-				
-			</div>
-					 
 				<div class="linklist">
 					<h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+          <p>
+            We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the insight he's given us during lab hours.</p><p>
 
-					<p>placeholder text</p>
+            We would also like to thank all of the TAs who answered our questions and helped us debug. A special thanks to our lab TA Eileen Liu, who additionally provided us with regular feedback on our proposed ideas and methods over the course of the project to help us stay on track.
+
+          </p>
+
 				</div>
+        
+      </div>
+
+           
 			</div>
 		<!-- end maincontent -->
 	</div>
