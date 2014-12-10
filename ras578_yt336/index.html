@@ -86,7 +86,7 @@
 
 				<div class="image">
 					<p class="c1 c25"><img src="webpage_files/banner.jpg" width="740" height="315"></p>
-					<p class="caption">Obligatory Glamor Shot</p>
+					<p class="caption">Figure 1: Obligatory Glamor Shot</p>
 				</div>
 
 				<div id="pullquote">
@@ -107,7 +107,7 @@
 
         <div class="image">
           <p class = "c1 c25"><img src="webpage_files/overview.jpg" alt="" width="500" height="300"></a></p>
-          <p class="caption">Figure 1: High Level Project Structure</p>
+          <p class="caption">Figure 2: High Level Project Structure</p>
         </div>
 				
 				<p dir="ltr"><strong>Inspiration and Rationale</strong></p>
@@ -118,10 +118,18 @@
 
 				<p dir="ltr"><strong>Math</strong></p>
 
-        <p>The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided by the user. To set OCR3A, we used the formula: <code>period = (62500 * 60) / tempo - 1</code>. 
+        <p>Our project required precise real-time timing to make sure the right chords were displayed on the LEDs according to the tempo specified by the user. The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided in the song file. 
+          </p><p>
+          We used the timer 3 ISR to do the timming for the song. We set the prescalar to 256, which means that the clock ticks once every <code>256/16000000</code> seconds. Thus, we have <code>256/16000000 = 62500</code> ticks per second. The user provides the <code>tempo</code> in beats per minute (bpm), so to convert this into a value OCR3A we calculated: <code>(1 min/tempo beats) * (60 sec/min) * (62500 ticks/sec)</code> and then subtracted 1 from this value because according to the datasheet the microcontroller uses <code>TOP+1</code> as its top trigger value for the clock ISR. </p><p>Thus we obtain our formula: <code>period = (62500 * 60) / tempo - 1</code>. So whenever the user specifies a <code>tempo</code>, we apply this formula and set OCR3A to the result.
         </p>
 				<p dir="ltr"><strong>Logical Structure</strong></p>
         <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
+        </p>
+        <p>
+          On the MCU side of things, we run two real-time tasks using TRT. One of them listens on <code>STDIN</code> for the user to input a new command on the CLI. When a command does arrive, it proceeds to determine which of the two modes was specified by the user, practice mode or play mode. In practice mode, the LEDs for a single chord are held on indefinitely, until the user specifies a different chord in practice mode or switches to play mode. In play mode, the microcontroller plays the specified song by lighting the LEDs corresponding to the song chords sequentially according to the chord duration provided in the song file. Depending on which mode is expected, this task will deserializing the rest of the data accordingly, 
+        </p>
+        <p>
+          After
         </p>
 				<p dir="ltr"><strong>Hardware Tradeoffs</strong></p>
         <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel. We decided to use the series method because of the simplicity and compatibility with our drivers.</p>
@@ -142,7 +150,7 @@
 				</div>
         <p><strong>Command Line Interface</strong></p>
         <p>
-          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode, where the LEDs for a single chord are held on indefinitely (until the user specifies a different chord in practice mode or switches to play mode). The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into practice mode, which plays the specified song by lighting the LEDs corresponding to the song chords sequentially according to the chord duration. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
+          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode. The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into play mode. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
         </p>
         </p> <p>
           To implement this functionality we used the python library docopt, which allows us to easily define different command types, sanity check the user's command line input, and parse the command line arguments.
@@ -265,7 +273,7 @@
 				<p dir="ltr"><strong>Legal Considerations</strong></p>
 
 			</div>
-      
+
 
 			<h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
@@ -452,11 +460,12 @@
 				<div class="linklist">
 					<h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
           <p>
-            We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the 
+            We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the insight he's given us during lab hours.</p><p>
+
+            We would also like to thank all of the TAs who answered our questions and helped us debug. A special thanks to our lab TA Eileen Liu, who additionally provided us with regular feedback on our proposed ideas and methods over the course of the project to help us stay on track.
 
           </p>
 
-					<p>placeholder text</p>
 				</div>
         
       </div>
