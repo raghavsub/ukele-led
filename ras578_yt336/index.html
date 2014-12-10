@@ -139,6 +139,23 @@
           In terms of software, a big problem we ran into initially was driving the lights. The lights are driven by a very precisely timed pwm wave. We at first attempted to generate this pwm signal ourselves using the same technique as in lab 2, but we soon realized that the timing specifications were too precise and our MCU could not meet them. Following the specifications of WS2812 Datasheet linked in the References section, the various overflow thresholds would need to be changed every few hundred nanoseconds or so, which would almost surely been impossible to do from a standalone C program let alone one running in conjunction with the time overheads caused by TRT and context switching. The reference article linked along with Alan Burlison's WS2811 Driver explains in detail the virtual infeasibility of this task using C code running on a 16MHz AVR. </p><p>After realizing this and doing some research, we found Burlison's WS2811 Driver, which achieves the strict specifications using very precise pulse-timing no-op delays in assembly. Utilizing this driver, we were able to successfully drive the LEDs and move onto the next phase of the project.
         </p>
 
+        <p dir="ltr"><strong>Pictures</strong></p>
+
+        <div class="image">
+					<p class = "c1 c25"><img src="webpage_files/major_play.jpg" alt="" width="420" height="312"></a></p>
+					<p class="caption">Figure 2: ukule-LED in Use: Major Chords are Green</p>
+				</div>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/minor.jpg" alt="" width="437" height="291"></a></p>
+					<p class="caption">Figure 3: Minor Chords are Red</p>
+				</div>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/seventh.jpg" alt="" width="437" height="291"></a></p>
+					<p class="caption">Figure 4: Seventh Chords are Blue</p>
+				</div>
+
 			</div>
 		 
 			<div class="linklist"> <a name="software"></a>
@@ -146,7 +163,7 @@
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/software.jpg" alt="" width="500" height="350"></a></p>
-					<p class="caption">Figure 2: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
+					<p class="caption">Figure 5: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
 				</div>
         <p><strong>Command Line Interface</strong></p>
         <p>
@@ -215,13 +232,15 @@
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/electronics.jpg" alt="" width="436" height="291"></a></p>
-					<p class="caption">Figure <strong>X</strong>. The microcontroller board and the solder board.</p>
+					<p class="caption">Figure 6: The Microcontroller Board and the Solder Board</p>
 				</div>
 				
 			</div>
 			
 			<div class="linklist"> <a name="results"></a>
 				<h2>Results &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+				<p>We met all of the specifications we set forth in our project proposal.</p>
 
 				<p dir="ltr"><strong>Speed and Accuracy</strong></p>
 
@@ -260,6 +279,10 @@
 
 				<p dir="ltr"><strong>Intellectual Property Considerations</strong></p>
 
+				<p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver to use bit-banging to drive our RGB LEDs. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti PySerial module to enable serial communications between the PC and the microcontroller.</p>
+
+				<p>Our hardware design is original.</p>
+
 				<p dir="ltr"><strong>Ethical Considerations</strong></p>
 
         <p>In designing and building ukule-LED, we adhered to the <a href="http://www.ieee.org/about/corporate/governance/p7-8.html">IEEE Code of Ethics</a>.</p>
@@ -280,7 +303,7 @@
 				<h3>A. Schematics</h3>
 				<div class="image">
 					<p class = "c1 c25"><a href="webpage_files/schematic_highlevel.jpg"><img src="webpage_files/schematic_highlevel.jpg" alt="" width="600" height="270"></a></p>
-					<p class="caption">High-Level Hardware Schematic</p>
+					<p class="caption">Figure 7: High Level Hardware Schematic</p>
 				</div>
 
 				<h3>B. Cost Details</h3>
@@ -426,7 +449,26 @@
 				</table>
 
 				<h3>D. Code Listing</h3>
-				<p>placeholder</p>
+
+				<div class="group1">
+				  <h4>C</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/ukule-led.c">ukule-led.c</a></li>
+				  	<li><a href="webpage_files/code/trtkernel_1284.c">trtkernel_1284.c</a></li>
+				  	<li><a href="webpage_files/code/trtSettings.h">trtSettings.h</a></li>
+				  	<li><a href="webpage_files/code/chord_lookup_table.h">chord_lookup_table.h</a></li>
+				  </ul>
+				  <h4>Python</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/ukule_led.py">ukule_led.py</a></li>
+				  	<li><a href="webpage_files/code/chord_map.py">chord_map.py</a></li>
+						<li><a href="webpage_files/code/generate_header.py">generate_header.py</a></li>
+				  </ul>
+				  <h4>Other</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/after_the_gold_rush.txt">"After the Gold Rush"</a></li>
+				  </ul>
+				 </div>
 
 				<div class="linklist"><h2>References &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
@@ -447,8 +489,6 @@
               <li><a href="http://pyserial.sourceforge.net/">PySerial</a></li>
               <li><a href="http://docopt.org">docopt</a></li>
 				  	</ul>
-				  </div>
-				  <div class="group2">
 				  	<h3>Vendors</h3>
 				  	<ul>
 				  		<li><a href="http://www.adafruit.com">Adafruit</a></li>
@@ -463,7 +503,6 @@
             We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the insight he's given us during lab hours.</p><p>
 
             We would also like to thank all of the TAs who answered our questions and helped us debug. A special thanks to our lab TA Eileen Liu, who additionally provided us with regular feedback on our proposed ideas and methods over the course of the project to help us stay on track.
-
           </p>
 
 				</div>
