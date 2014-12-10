@@ -194,25 +194,25 @@
 
 				<p><strong>WS2812B RGB LEDs</strong></p>
 
-				<p>We used Adafruit's NeoPixel Mini PCBs, each of which includes a WS2812B RGB LED and the necessary capacitor, as given in the WS2812B datasheet. We decided to use the PCBs instead of directly using the LEDs to make soldering easier.</p>
+				<p>We used Adafruit's NeoPixel Mini PCBs, each of which includes a WS2812B RGB LED and the necessary capacitor, as given in the WS2812 datasheet. We decided to use the PCBs instead of directly directly using WS2812B LEDs to make soldering easier.</p>
 
-				<p>All of the RGB LEDs are driven from a single microcontroller I/O pin. As per the datasheet, they were all connected in series, with the Dout, 5V, and gnd pads of one wired to the Din, 5V, and gnd pads of the next. The Din pin of the first LED is connected to PORTA.0 on the microcontroller through a 330 ohm resistor to protect the first LED from any voltage spike, and the Dout pin of the last LED is not connected to anything. There is a 100 uF capacitor between the 5V and gnd lines, used to prevent large inrush currents from destroying </p>
+				<p>All of the RGB LEDs are driven from a single microcontroller I/O pin, PORTA0. As per the datasheet, they were all connected in series, with the Dout, 5V, and gnd pads of one wired to the Din, 5V, and gnd pads of the next. The Din pin of the first LED is connected to PORTA.0 on the microcontroller through a 330 ohm resistor to protect the first LED from any voltage spike, and the Dout pin of the last LED is not connected to anything. There is a 100 uF capacitor between the 5V and gnd lines, used to prevent large inrush currents from destroying the first LED.</p>
 
 				<p>Soldering the RGB LEDs together is the most challenging part of building the ukule-LED hardware. There should be four groups of four NeoPixel PCBs. The Din, Dout, 5V, and gnd pins of each group need to connected as described in the previous paragraph. We used very short lengths of wire, soldered to the pads on the NeoPixel PCBs, such that there was about 1-2 mm of space between each PCB. Next, these four groups need to be wired together. We used 3 approximately 4 cm lengths of wire to connect these. Finally, all 16 NeoPixel PCBs were to be hooked to the solder board with 3 approximately 50 cm lengths of wire.
 
 				<p><strong>Serial Connection</strong></p>
 
-				<p>We used a UART-to-USB cable to enable communication between the host PC and the microcontroller. The user specifies a song file path, then the Python CLI converts this file into a string and sends it through the cable to the microcontroller.</p>
+				<p>We used a USB serial cable to enable communication between the host PC and the microcontroller's USART. The user specifies a song file path, then the Python CLI converts this file into a string and sends it through the cable to the microcontroller.</p>
 
 				<p><strong>Power</strong></p>
 
-				<p>According to the <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/power">power</a> section of the Adafruit NeoPixel Überguide, each RGB LED driven at maximum brightness consumes 60 mA of current, resulting in a total current draw of 960 mA for 24 RGB LEDs.However, we drove a maximum of 4 LEDs at a time, with the macro <code>INTENS</code> to 20, out of a maximum value of 256. A back-of-the-envelope calculation gives approximately 18.75 mA of current, which is well below the absolute maximum DC current of 40 mA, given in the microcontroller's datasheet. As such, we decided that we could drive the RGB LEDs with a microcontroller pin, instead of resorting to an external power source as the Überguide suggested. We had no trouble with this.</p>
+				<p>According to the <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/power">power</a> section of the Adafruit NeoPixel Überguide, each RGB LED driven at maximum brightness consumes 60 mA of current, resulting in a total current draw of 960 mA for 24 RGB LEDs. However, we drove a maximum of 4 LEDs at a time, with the macro <code>INTENS</code> to 20, out of a maximum value of 256. A back-of-the-envelope calculation gives approximately 18.75 mA of current, which is well below the absolute maximum DC current of 40 mA for a microcontroller pin, given in the microcontroller's datasheet. As such, we decided that we could drive the RGB LEDs using the microcontroller's VCC line, instead of resorting to an external power source as the Überguide suggested. We had no trouble with this.</p>
 
 				<p>We were able to use a single 9V power supply for all of our power needs. We decided against using a 9V battery because the system has to be tethered to a computer with a USB serial cable anyways, and another cable coming out of the system is not a major inconvenience at that point.</p>
 
 				<p><strong>Ukulele</strong></p>
 
-				<p>To prepare the ukulele for our project, we had to dremel out the fretboard up to the fourth fret in to accomodate the RGB LEDs. We had to keep all the frets intact and keep the LEDs below the frets in order to maintain playability of the ukulele. We considered using epoxy to make the fretboard above the LEDs smooth, but we were worried that we wouldn't be able to keep the epoxy contained.</p>
+				<p>To prepare the ukulele for our project, we had to dremel out the fretboard up to the fourth fret in to accomodate the RGB LEDs. We also had to keep all the frets intact and keep the LEDs below the frets in order to maintain playability of the ukulele. We considered using epoxy to make the fretboard above the LEDs smooth, but we were worried that we wouldn't be able to keep the epoxy contained.</p>
 
 				<p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure <strong>X</strong>. Overall, we didn't add too much mass to the ukulele.</p>
 
@@ -228,19 +228,19 @@
 
 				<p dir="ltr"><strong>Speed and Accuracy</strong></p>
 
-				<p>In play mode, the system supports songs with tempos between 60 and 240 bpm. We feel that this range is enough for the vast majority of songs. These tempos are converted to timer periods by the formula <code>period = (62500 * 60) / tempo - 1</code>. This means the tempo resolution around 60 bpm is about 0.001 bpm and the tempo resolution around 240 bpm is about 0.015 bpm. This exceeds our needs considerably.</p>
+				<p>In play mode, the system supports songs with tempos between 60 and 240 bpm. We feel that this range is enough for the vast majority of songs. These tempos are converted to timer periods by the formula <code>period = (62500 * 60) / tempo - 1</code>. This means the tempo resolution around 60 bpm is about 0.001 bpm and the tempo resolution around 240 bpm is about 0.015 bpm. This exceeds our needs.</p>
 
 				<p>However, when the user starts a new song (in play mode) or selects a new chord (in practice mode), there is a delay. This happens because we have to first send a string to the microcontroller through the USART and then preprocess the string before the LEDs corresponding to the chords in the song can be lit up. This delay is about one second long. This isn't an issue in practice mode, and thanks to the count-in we implemented, isn't a large issue in play mode.</p>
 
 				<p dir="ltr"><strong>Testing</strong></p>
 
-				<p>We tested our ukulele primaily by feeding it sample song files and ensuring that the behavior was correct. We included a variety of chords: major, minor, and seventh chords, and made sure the correct LEDs were lit up and with the correct colors. We also ensured that,when no chord was specified in the current time in the song, that no LEDs are lit. We tried different time signatures to make sure the count-in mechanism worked. We also tested practice mode by feeding the system a variety of chords. Finally, we made sure that the system did not need to be power cycled during use. We tried using the device in play mode twice in a row, practice mode twice in a row, and tried to switch modes. </p>
+				<p>We tested our ukulele primaily by feeding it sample song files and ensuring that the behavior was correct. We included a variety of chords: major, minor, and seventh chords, and made sure the correct LEDs were lit up and with the correct colors. We also ensured that, when no chord was specified in the current time in the song, that no LEDs were lit. We tried different time signatures to make sure the count-in mechanism worked. We also tested practice mode by feeding the system a variety of chords. Finally, we made sure that the system did not need to be power cycled during use. We tried using the device in play mode twice in a row, practice mode twice in a row, and tried to switch modes.</p>
 
 				<p>Soldering together the RGB LEDs was difficult, and the connections were prone to breakage if the LEDs were jostled. In addition, all of the LEDs were in series, so breakage of one wire would disconnect all successive LEDs. We therefore had to test the connection every time we physically adjusted the LEDs. This was especially important before we glued the LEDs into their places within the ukulele fretboard.</p>
 
 				<p dir="ltr"><strong>Safety</strong></p>
 
-				<p>There are not many electrical hazards in our system. We use a single 9V power supply, which is not enough voltage to harm someone. We also shielded the high-current RGB LED data line with a layer of hot glue. As the user's fingers come very close to the LEDs while the system is in use, we used hot glue to shield all of those wires as well. The hot glue also gave our connections some mechanical strength. </p>
+				<p>There are not many electrical hazards in our system. We use a single 9V power supply, which is not enough voltage to harm someone. We also shielded the exposed portions of the RGB LEDs' data and power lines with a layer of hot glue. As the user's fingers come very close to the LEDs while the system is in use, we used hot glue to shield all of those wires as well. The hot glue also gave our connections some mechanical strength. </p>
 
 				<p>One possible hazard is the fact that there are two cables coming out of ukulele, the power supply cable and the USB serial cable. These may pose a tripping hazard, but we do not think it is a major concern, since the wires can all be disconnected when the system is not in use.</p>
 
@@ -252,7 +252,7 @@
 
 				<p dir="ltr"><strong>Extensibility</strong></p>
 
-				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
+				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps these indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
 
 			</div>
 
