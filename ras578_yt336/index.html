@@ -155,7 +155,10 @@
           |A - Bbm A7|Bm X A#7 -|A - X D|</code>
 				</p>
         <p>
-          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). 
+          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). 
+        </p>
+        <p>
+          The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. 
         </p>
 				<p><strong>File Serial Transmission</strong></p>
 				<p><strong>Initialization</strong></p>
@@ -262,6 +265,7 @@
 				<p dir="ltr"><strong>Legal Considerations</strong></p>
 
 			</div>
+      
 
 			<h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
@@ -445,14 +449,19 @@
 				  </div>
         </div>
 
-				
-			</div>
-					 
 				<div class="linklist">
 					<h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+          <p>
+            We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the 
+
+          </p>
 
 					<p>placeholder text</p>
 				</div>
+        
+      </div>
+
+           
 			</div>
 		<!-- end maincontent -->
 	</div>
