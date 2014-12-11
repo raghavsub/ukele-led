@@ -180,7 +180,10 @@
         </p>  
 				<p><strong>Receiving From Serial Port</strong></p>
         <p>
-          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>.
+          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>. 
+        </p>  
+        <p>
+          When it comes out of waiting, it will have a command buffered in <code>cmd</code>. It then checks if the <code>go</code> flag does not equal 2 and proceeds if so, else it ignores the new command. The <code>go</code> flag indicates which mode it is currently in (0 for idle, 1 for practice, 2 for play). 
         </p>  
 				<p><strong>Real-time LED Driving</strong></p>
         <p><strong>TRT and Scheduling</strong></p>
