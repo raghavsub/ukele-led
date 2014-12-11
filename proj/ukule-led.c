@@ -143,9 +143,9 @@ void serialComm(void* args) {
 				time_sig = 1;
 			}
 
+            strToSong(cmd + 8, song);
+            
 			count = 0;
-			
-			strToSong(cmd + 8, song);
 			song_idx = 0;
 			go = 2;
 		}
