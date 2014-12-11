@@ -212,12 +212,28 @@
         </p>
 				<p><strong>Real-time LED Driving</strong></p>
         <p>
-          We use the timer3 ISR to drive the song. When the ISR fires, it first checks if <code>go == 2</code>, signifying whether it is in play mode or not. If it is not in play mode, then all the ISR does is set 
+          We use the timer3 ISR to drive the song. The way it does this is by setting <code>chord_idx</code> to an index into our array in <code>chord_lookup_table.h</code>, which is a multidimensional array in which each index contains another array that the driver reads in order to set the LEDs to light up a specific chord. When the ISR fires, it first checks which mode the program is in.
+
+          If it is not in play mode and <code>go == 0</code> then it should be in idle mode, so in this case all the ISR does is set <code>chord_idx = 0</code>, which makes sure none of the LEDs are on since index 0 is the index for the "play nothing" chord. If <code>go == 1</code> then it is in practice mode <code>chord_idx</code> is already set to the correct value, so the ISR is a no-op.
+        </p>  
+        <p>
+          If <code>go == 2</code>, then it is in play mode, which means it is time to transition the LEDs. It checks if <code>count < time_sig</code>, if so we are in the count-in phase so we set <code>chord_idx</code> to one of the special indicies in our chord lookup table that each lights a different single LED white at a time, to do a count-in before the song to get the user ready for the tempo to expect. It then increments <code>count</code>, this happens until <code>count == time_sig</code> so the length of the count-in is the number of beats per measure.
+        </p>
+        <p>
+          If the count-in is done, then it sets <code>chord_idx = song[song_idx]</code>, so the current chord to be played is the index into the song array corresponding to <code>song_idx</code>, our current position we have advanced to in the song array so far. If the song is done then it will find that <code>song_idx == -1</code> which is our terminating flag, in which case it will set <code>go</code> and <code>chord_idx</code> back to 0. Finally, it increments <code>song_idx</code> to advance our position in the song.
+        </p>  
+        <p>
+          Our second real-time task simply polls the <code>song_idx</code> value set by the ISR and uses it to drive the LEDs by feeding it to the driver. It takes <code>lookup_table[chord_idx]</code> and feeds it into the LED, since <code>chord_idx</code> is the number associated with the chord to be played such that the <code>lookup_table</code> at <code>chord_idx</code> contains the array that the driver can read to drive the LEDs to light up the lights associated with that chord. 
         </p>  
 
         <p><strong>TRT and Scheduling</strong></p>
+        <p>
+          Our first real-time task does not need to be rescheduled with new deadlines each time since it spends almost all of its time blocking on the semaphore waiting for user input to come in. Our second real-time task is scheduled to every <code>0.01</code> seconds, which guarantees that whenever <code>chord_idx</code> changes it is reflected in the LEDs almost immediately within a timeframe such that the delay is inperceptible to users. Using TRT greatly improved our software structure as it allowed us to break up the tasks we needed into modular components that are easy to think about and modify independently of each other, and allows one process to wait on user input while the other can keep running (as opposed to a single task that drives the LEDs and also periodically polls for user input simultaneously which is less efficient due to polling and can get very messy).
+        </p>
 				<p><strong>Chord Lookup Table Generation</strong></p>
-
+        <p>
+          Our <code>chord_lookup_table.h</code> contains at every index an array which tells the driver how to drive the LEDs for a given chord. These arrays would be very tedious to write by hand, since they are large and there are many chords which each require a seperate array. To simplify this process, we wrote a Python script <code>generate_header.py</code> which, given the finger positions on the four strings and a color, automatically generates the required array. A user can use this script or a similar script to help extend the functionality of the project to easily add more chords that are not currently supported. However, the implementation details of the script are not essential to the projecct.
+        </p>
 
 			</div>
 
