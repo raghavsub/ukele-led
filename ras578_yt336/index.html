@@ -143,17 +143,17 @@
 
         <div class="image">
 					<p class = "c1 c25"><img src="webpage_files/major_play.jpg" alt="" width="420" height="312"></a></p>
-					<p class="caption">Figure 2: ukule-LED in Use: Major Chords are Green</p>
+					<p class="caption">Figure 3: ukule-LED in Use: Major Chords are Green</p>
 				</div>
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/minor.jpg" alt="" width="437" height="291"></a></p>
-					<p class="caption">Figure 3: Minor Chords are Red</p>
+					<p class="caption">Figure 4: Minor Chords are Red</p>
 				</div>
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/seventh.jpg" alt="" width="437" height="291"></a></p>
-					<p class="caption">Figure 4: Seventh Chords are Blue</p>
+					<p class="caption">Figure 5: Seventh Chords are Blue</p>
 				</div>
 
 			</div>
@@ -163,7 +163,7 @@
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/software.jpg" alt="" width="500" height="350"></a></p>
-					<p class="caption">Figure 5: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
+					<p class="caption">Figure 6: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
 				</div>
         <p><strong>Command Line Interface</strong></p>
         <p>
@@ -254,11 +254,11 @@
 
 				<p>To prepare the ukulele for our project, we had to dremel out the fretboard up to the fourth fret in to accomodate the RGB LEDs. We also had to keep all the frets intact and keep the LEDs below the frets in order to maintain playability of the ukulele. We considered using epoxy to make the fretboard above the LEDs smooth, but we were worried that we wouldn't be able to keep the epoxy contained.</p>
 
-				<p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure <strong>X</strong>. Overall, we didn't add too much mass to the ukulele.</p>
+				<p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure 7. Overall, we didn't add too much mass to the ukulele.</p>
 
 				<div class="image">
 					<p class = "c1 c25"><img src="webpage_files/electronics.jpg" alt="" width="436" height="291"></a></p>
-					<p class="caption">Figure 6: The Microcontroller Board and the Solder Board</p>
+					<p class="caption">Figure 7: The Microcontroller Board and the Solder Board</p>
 				</div>
 				
 			</div>
@@ -299,13 +299,15 @@
 
       <div class="linklist"> <a name="conclusions"></a>
         <h2>Conclusions &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
-				<p>We met all of the specifications we set forth in our project proposal. ukule-LED is capable of showing the user how to play songs with play mode, and is capable of showing the user how to play chords with practice mode. Our user interface is intuitive, and ukule-LED plays similarly to an unmodified ukulele. We built a good product.</p>
+				<p>We met all of the specifications we set forth in our project proposal. ukule-LED is capable of showing the user how to play songs with play mode, and is capable of showing the user how to play chords with practice mode. Our user interface is intuitive, and ukule-LED plays similarly to an unmodified ukulele. We built a good product. If given more time, we would implement some of the extensions we discussed in the extensibility section.</p>
 
 				<p dir="ltr"><strong>Standards</strong></p>
 
+				<p>In this project, we utilized serial communication via a USART interface. We used a baud rate of 9600 for data transmission.</p>
+
         <p dir="ltr"><strong>Intellectual Property Considerations</strong></p>
 
-        <p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver to use bit-banging to drive our RGB LEDs. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti PySerial module to enable serial communications between the PC and the microcontroller.</p>
+        <p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti's PySerial module to enable serial communications between the PC and the microcontroller.</p>
 
         <p>Our hardware design is original.</p>
 
@@ -320,6 +322,9 @@
         <p>We honestly accepted criticism for our work, in the form of our proposal review and debugging help from the course TAs and instructor. We also thoroughly acknowledged our sources and inspirations, including the libraries and drivers that made our work much simpler. We also assisted our fellow students in the course by providing honest criticism if asked, but we stayed well within the limits outlined in the Cornell University Code of Academic Integrity.</p>
 
         <p dir="ltr"><strong>Legal Considerations</strong></p>
+
+        <p>As far as we know, there are no legal complications associated with ukule-LED.</p>
+
       </div>
 
 
@@ -511,8 +516,8 @@
               <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
               <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TRT for ATmega1284</a></li>
               <li><a href="http://people.ece.cornell.edu/land/PROJECTS/ProtoBoard476/">Custom PCB for ATmega1284</a></li>
-              <li><a href="http://pyserial.sourceforge.net/">PySerial</a></li>
               <li><a href="http://docopt.org">docopt</a></li>
+              <li><a href="http://pyserial.sourceforge.net/">PySerial</a></li>
 				  	</ul>
 				  	<h3>Vendors</h3>
 				  	<ul>
@@ -524,11 +529,9 @@
 
 				<div class="linklist">
 					<h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
-          <p>
-            We would like to thank Professor Bruce Land for teaching us the background knowledge over the course of the semester to allow us to build this project, and for the insight he's given us during lab hours.</p><p>
+          <p>We would like to thank Bruce Land for sharing with us his electronics wizardry, and for providing inspiration and debugging insight during lab hours.</p>
 
-            We would also like to thank all of the TAs who answered our questions and helped us debug. A special thanks to our lab TA Eileen Liu, who additionally provided us with regular feedback on our proposed ideas and methods over the course of the project to help us stay on track.
-          </p>
+          <p>We would also like to thank the course TAs, especially our lab TA, Eileen Liu, who gave us great feedback on our project proposal and weekly updates.</p>
 
 				</div>
         
