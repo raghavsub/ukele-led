@@ -290,9 +290,11 @@
 
 				<p>One of our goals in designing ukule-LED was to detract from the ukulele experience as little as possible. This is what makes it usuable as a ukulele tutor. We did this by first minimizing the mass of the components we used. Next, we tried to arrange the wiring so that it is unobstrusive when the user is holding the ukulele in a playing position.</p>
 
-				<p>We feel that our system is intuitive to use, but we found that ukulele beginners needed to start with practice mode in order figure out finger positions for chords before they could proceed to play mode</p>
+        <p>We feel that our system is intuitive to use, but we found that ukulele beginners needed to start with practice mode in order figure out finger positions for chords before they could proceed to play mode</p>
 
-				<!-- <p dir="ltr"><strong>Extensibility</strong></p> -->
+        <p dir="ltr"><strong>Extensibility</strong></p>
+
+				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps these indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
 
 
       </div>
@@ -319,9 +321,6 @@
         <p>We honestly accepted criticism for our work, in the form of our proposal review and debugging help from the course TAs and instructor. We also thoroughly acknowledged our sources and inspirations, including the libraries and drivers that made our work much simpler. We also assisted our fellow students in the course by providing honest criticism if asked, but we stayed well within the limits outlined in the Cornell University Code of Academic Integrity.</p>
 
         <p dir="ltr"><strong>Legal Considerations</strong></p>
-        <p dir="ltr"><strong>Extensibility and Future Work</strong></p>
-
-				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps these indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
       </div>
 
 
