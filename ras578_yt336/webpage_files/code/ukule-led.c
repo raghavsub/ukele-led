@@ -61,7 +61,7 @@ int count;
 // 2 means we are in play mode
 char go = 0;
 
-/* send the output signal to the 
+/* send the output signal to the RGB LEDs periodically */
 void driveLED(void* args) {
 
 	long rel;
@@ -91,41 +91,33 @@ void strToSong(char *str, int *song) {
 
 }
 
-// --- define task 2  ----------------------------------------
+/* get the string from the USART */
 void serialComm(void* args) {
 	int val;
 	char cmd[1000];
 
-	while(1)
-	{
-		//fscanf(stdin, "%s", cmd);
+	while(1) {
 		
-gets(cmd);
+        gets(cmd);
 		trtWait(SEM_STRING_DONE);
-
-		/*if (cmd[0] == 'f') {
-			sprintf(lcd_buffer,"first: %d     ", val);
-			LCDGotoXY(0, 0);
-			LCDstring(lcd_buffer, strlen(lcd_buffer));
-			leds[0] = val;
-		}*/
 	
+        // don't interrupt the current song
 		if (go != 2) {
-			LCDGotoXY(0, 0);
-			LCDstring(cmd, strlen(cmd));
 
-			if( cmd[0] == '1' ) {
-				char buf3[3];
-				strncpy(buf3, cmd + 2, 2);	
-				chord_idx = atoi(buf3);
+            // practice mode
+			if (cmd[0] == '1') {
+				char buf1[3];
+				strncpy(buf1, cmd + 2, 2);	
+				chord_idx = atoi(buf1);
 				go = 1;
 				continue;
 			}
 
-			char buf[4];
-			strncpy(buf, cmd + 2, 3);
+            // play mode
+			char buf2[4];
+			strncpy(buf2, cmd + 2, 3);
 			
-			bpm = atoi(buf);
+			bpm = atoi(buf2);
 			if (bpm < 60) {
 				bpm = 60;
 			}
@@ -133,12 +125,12 @@ gets(cmd);
 				bpm = 240;
 			}
 
+            // convert bpm to timer period
 			OCR3A = (62500 * 60) / bpm - 1;
-			//OCR3A = 60000;
 
-			char buf2[2];
-			strncpy(buf2, cmd + 6, 1);
-			time_sig = atoi(buf2);
+			char buf3[2];
+			strncpy(buf3, cmd + 6, 1);
+			time_sig = atoi(buf3);
 			if (time_sig < 1) {
 				time_sig = 1;
 			}
@@ -152,7 +144,7 @@ gets(cmd);
 	}
 }
 
-// timer 3 compare match isr
+/* timer3 compare match ISR */
 ISR (TIMER3_COMPA_vect) {
 	if(go == 2) {
 		if(count < time_sig) {
@@ -161,11 +153,11 @@ ISR (TIMER3_COMPA_vect) {
 		} else {
 			chord_idx = song[song_idx];
 
+            // end of song
 			if(chord_idx == -1) {
 				go = 0;
 				chord_idx = 0;
 			}
-			
 			song_idx++;
 		}
 	} else if (!go) {
@@ -173,51 +165,44 @@ ISR (TIMER3_COMPA_vect) {
 	}
 }
 
-// --- Main Program ----------------------------------
+/* MAIN */
 int main(void) {
 
-  // setup neopixel driver
-  SET_BIT_HI(DDRA, 0);
-  SET_BIT_LO(PORTA, 0);
+    // setup neopixel driver
+    SET_BIT_HI(DDRA, 0);
+    SET_BIT_LO(PORTA, 0);
 
-  // setup timer 3
-  //TCCR3A = (1<<WGM32); // ctc
-  TCCR3B = (1<<WGM32) + 0x04; // prescale by 256
-  OCR3A = 10000; // 1 second (DEFAULT)
-  TIMSK3= (1<<OCIE3A); // enable interrupt
+    // setup timer 3
+    TCCR3B = (1<<WGM32) + 0x04; // ctc, prescale by 256
+    OCR3A = 10000; // 1 second (DEFAULT)
+    TIMSK3= (1<<OCIE3A); // enable interrupt
 
-  // setup LCD
-  LCDinit();
-  LCDcursorOFF();
-  LCDclr();
-  LCDGotoXY(0,0);
+    //init the UART -- trt_uart_init() is in trtUart.c
+    trt_uart_init();
+    stdout = stdin = stderr = &uart_str;
+    fprintf(stdout,"\n\r TRT 9feb2009\n\r\n\r");
 
-  //init the UART -- trt_uart_init() is in trtUart.c
-  trt_uart_init();
-  stdout = stdin = stderr = &uart_str;
-  fprintf(stdout,"\n\r TRT 9feb2009\n\r\n\r");
+    // start TRT
+    trtInitKernel(80); // 80 bytes for the idle task stack
 
-  // start TRT
-  trtInitKernel(80); // 80 bytes for the idle task stack
+    // --- create semaphores ----------
+    // You must creat the first two semaphores if you use the uart
+    trtCreateSemaphore(SEM_RX_ISR_SIGNAL, 0) ; // uart receive ISR semaphore
+    trtCreateSemaphore(SEM_STRING_DONE,0) ;  // user typed <enter>
 
-  // --- create semaphores ----------
-  // You must creat the first two semaphores if you use the uart
-  trtCreateSemaphore(SEM_RX_ISR_SIGNAL, 0) ; // uart receive ISR semaphore
-  trtCreateSemaphore(SEM_STRING_DONE,0) ;  // user typed <enter>
+    // variable protection
+    trtCreateSemaphore(SEM_SHARED, 1) ; // protect shared variables
+
+    // --- creat tasks  ----------------
+    trtCreateTask(driveLED, 100, SECONDS2TICKS(1), SECONDS2TICKS(1), &(args[0]));
+    trtCreateTask(serialComm, 100, SECONDS2TICKS(0.1), SECONDS2TICKS(0.1), &(args[1]));
   
-  // variable protection
-  trtCreateSemaphore(SEM_SHARED, 1) ; // protect shared variables
-
- // --- creat tasks  ----------------
-  trtCreateTask(driveLED, 100, SECONDS2TICKS(1), SECONDS2TICKS(1), &(args[0]));
-  trtCreateTask(serialComm, 100, SECONDS2TICKS(0.1), SECONDS2TICKS(0.1), &(args[1]));
-  
-  // --- Idle task --------------------------------------
-  // just sleeps the cpu to save power 
-  // every time it executes
-  set_sleep_mode(SLEEP_MODE_IDLE);
-  sleep_enable();
-  while (1) {
-  	sleep_cpu();
-  }
-} // main
+    // --- Idle task --------------------------------------
+    // just sleeps the cpu to save power 
+    // every time it executes
+    set_sleep_mode(SLEEP_MODE_IDLE);
+    sleep_enable();
+    while (1) {
+  	    sleep_cpu();
+    }
+}
