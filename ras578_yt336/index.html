@@ -180,15 +180,15 @@
           |A - Bbm A7|Bm X A#7 -|A - X D|</code>
 				</p>
         <p>
-          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). 
+          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). Note that usually chords are strummed for equal durations throughout most ukulele songs, but to specify something like quarter vs half notes all that is needed is to set the tempo so that a beat is equal to the length of the smallest desired note length, and write longer notes as shorter notes that are held over more beats. 
         </p>
         <p>
           The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. There can be an arbitrary number of measures, broken up into however many lines the user wants. We support major, minor, and seventh chords, on the standard octave along with sharps and flats. A - signifies to hold a previous chord on for another beat, and an X means no chord should be displayed.
         </p>
 				<p><strong>File Parsing and Serial Transmission</strong></p>
-        <p>When the Python script receives a command from the user, it uses docopt to parse the command arguments and determines the command. We serialize our command and data using a string of numbers delimited by the / character. To parse the song file, the script uses the standard IO library built in for Python to read the file, and the string library to do sanity checks and extract the file contents into memory. We developed an encoding that assigns each chord a unique number starting from 1, and the script scans over the chords in the song file and converts them to the numbers based on a map we provide. </p><p>The data is then converted into a string so that it can be serialized and sent over the serial connection. An example string we might send to put the program in practice mode is <code>"1/17"</code>, and an example string for play mode is <code>"2/200/4/14/13/02/30/-1"</code>. The first number sent is a flag to denote practice mode (1), or play mode (2). Practice mode is simple, the only information after the "1" needed is the number for the single chord to be held on. </p>
+        <p>When the Python script receives a command from the user, it uses docopt to parse the command arguments and determines the command. We serialize our command and data using a string of numbers delimited by the / character. To parse the song file, the script uses the standard IO library built in for Python to read the file, and the string library to do sanity checks and extract the file contents into memory. We developed an encoding that assigns each chord a unique number starting from 1, and the script scans over the chords in the song file and converts them to the numbers based on a map we provide. 0 is special and is assigned to <code>X</code>, the "play nothing" chord. </p><p>The data is then converted into a string so that it can be serialized and sent over the serial connection. An example string we might send to put the program in practice mode is <code>"1/17"</code>, and an example string for play mode is <code>"2/200/4/14/13/02/30/-1"</code>. The first number sent is a flag to denote practice mode (1), or play mode (2). Practice mode is simple, the only information after the "1" needed is the number for the single chord to be held on. </p>
 
-        <p>For play mode, after the leading "2" the second number provided is the tempo, and third is the beats per measure, which are 200 and 4 in the example respectively. The next numbers are the chords of the song in sequential order. There are indefinitely many of them, and the list is terminated by a -1. Using Pyserial, the script then opens a connection to the port provided as a command line argument by the user, and writes the serialized string to the port.</p>
+        <p>For play mode, after the leading "2" the second number provided is the tempo, and third is the beats per measure, which are 200 and 4 in the example respectively. The next numbers represent the chords of the song in sequential order. There are indefinitely many of them, and the list is terminated by a -1. Using Pyserial, the script then opens a connection to the port provided as a command line argument by the user, and writes the serialized string to the port.</p>
         <p><strong>Initialization</strong></p>
         <p>
           On the MCU side of things, we start of with a <code>main(void)</code> function that runs once to initialize everything when the program first starts. First, it sets up the Neopixel driver by registering portA to be the port it will communicate over and setting the data direction DDRA of the port to output. Next, it sets up timer3 as the timer that drives the timed transitions between chords by setting the prescalar to 256, setting a default value to OCR3A which will be overwritten later, and enabling the timer3 interrupt.</p>
@@ -197,9 +197,24 @@
         </p>  
 				<p><strong>Receiving From Serial Port</strong></p>
         <p>
-          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>.
+          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>. 
         </p>  
+        <p>
+          When it comes out of waiting, it will have a command buffered in <code>cmd</code>. It then checks if the <code>go</code> flag does not equal 2 and proceeds if so, else it ignores the new command. The <code>go</code> flag indicates which mode it is currently in (0 for idle, 1 for practice, 2 for play). So while in play mode new commands are ignored, but they are accepted otherwise. After receiving the command which is the serialized string of the form described previously, the first thing the function does is to check whether the first number in the string is a 1 or a 2. 
+        </p>  
+        <p>
+          If the first number is 1 (it converts portions of the command string to numbers by copying the portions out to a local buffer and calling <code>atoi</code> on it), then it sets <code>chord_idx</code> to the second number in the array, which is the number corresponding to the single chord to light up. <code>chord_idx</code> is a global variable whose value is always the number associated with the chord that should be displayed on the LEDs at the current time. So in play mode, <code>chord_idx</code> is set to a single chord for indefinitely long, until it is changed by another user command. 
+        </p>
+        <p>
+          Otherwise if the first number is 2, then it has to parse a song file and go into play mode. It reads out the second number in the <code>cmd</code> array, which is the tempo in bpm of the song. It does bounds checking on this tempo, since we only support the range <code>60-240 bpm</code> it rounds values outside this range to their closest values within range. Next, it takes the <code>tempo</code> value and runs the formula for converting this to a clock period described in the Math section, and sets OCR3A to the resulting period. Next it extracts the third number which is the beats per measure, and saves the value in the global variable <code>time_sig</code>, which it uses to do a count-in to prepare the user for the tempo.
+        </p>  <p>
+          Next comes extracting the song, which is done by calling the helper function <code>strToSong</code> on the rest of the <code>cmd</code> array. This function walks through the <code>cmd</code> array number by number, converts them to ints, and inserts them into a global <code>song</code> array of ints. This array now contains the numbers for all chords in the song in order. Finally, when this subroutine finishes the real-time process sets <code>count = 0</code> (which is used to track of the count-in), <code>song_idx = 0</code> and <code>go = 2</code>, and goes back to waitng for the next command.
+        </p>
 				<p><strong>Real-time LED Driving</strong></p>
+        <p>
+          We use the timer3 ISR to drive the song. When the ISR fires, it first checks if <code>go == 2</code>, signifying whether it is in play mode or not. If it is not in play mode, then all the ISR does is set 
+        </p>  
+
         <p><strong>TRT and Scheduling</strong></p>
 				<p><strong>Chord Lookup Table Generation</strong></p>
 
@@ -273,28 +288,28 @@
 
 				<p>One of our goals in designing ukule-LED was to detract from the ukulele experience as little as possible. This is what makes it usuable as a ukulele tutor. We did this by first minimizing the mass of the components we used. Next, we tried to arrange the wiring so that it is unobstrusive when the user is holding the ukulele in a playing position.</p>
 
-				<p>We feel that our system is intuitive to use, but we found that ukulele beginners needed to start with practice mode in order figure out finger positions for chords before they could proceed to play mode</p>
+        <p>We feel that our system is intuitive to use, but we found that ukulele beginners needed to start with practice mode in order figure out finger positions for chords before they could proceed to play mode</p>
 
-				<p dir="ltr"><strong>Extensibility</strong></p>
+        <p dir="ltr"><strong>Extensibility</strong></p>
 
 				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps these indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
 
-			</div>
 
-			<div class="linklist"> <a name="conclusions"></a>
-				<h2>Conclusions &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+      </div>
 
+      <div class="linklist"> <a name="conclusions"></a>
+        <h2>Conclusions &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 				<p>We met all of the specifications we set forth in our project proposal. ukule-LED is capable of showing the user how to play songs with play mode, and is capable of showing the user how to play chords with practice mode. Our user interface is intuitive, and ukule-LED plays similarly to an unmodified ukulele. We built a good product.</p>
 
 				<p dir="ltr"><strong>Standards</strong></p>
 
-				<p dir="ltr"><strong>Intellectual Property Considerations</strong></p>
+        <p dir="ltr"><strong>Intellectual Property Considerations</strong></p>
 
-				<p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver to use bit-banging to drive our RGB LEDs. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti PySerial module to enable serial communications between the PC and the microcontroller.</p>
+        <p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver to use bit-banging to drive our RGB LEDs. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti PySerial module to enable serial communications between the PC and the microcontroller.</p>
 
-				<p>Our hardware design is original.</p>
+        <p>Our hardware design is original.</p>
 
-				<p dir="ltr"><strong>Ethical Considerations</strong></p>
+        <p dir="ltr"><strong>Ethical Considerations</strong></p>
 
         <p>In designing and building ukule-LED, we adhered to the <a href="http://www.ieee.org/about/corporate/governance/p7-8.html">IEEE Code of Ethics</a>.</p>
 
@@ -304,18 +319,17 @@
 
         <p>We honestly accepted criticism for our work, in the form of our proposal review and debugging help from the course TAs and instructor. We also thoroughly acknowledged our sources and inspirations, including the libraries and drivers that made our work much simpler. We also assisted our fellow students in the course by providing honest criticism if asked, but we stayed well within the limits outlined in the Cornell University Code of Academic Integrity.</p>
 
-				<p dir="ltr"><strong>Legal Considerations</strong></p>
+        <p dir="ltr"><strong>Legal Considerations</strong></p>
+      </div>
 
-			</div>
 
+      <h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
 
-			<h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
-
-				<h3>A. Schematics</h3>
-				<div class="image">
-					<p class = "c1 c25"><a href="webpage_files/schematic_highlevel.jpg"><img src="webpage_files/schematic_highlevel.jpg" alt="" width="600" height="270"></a></p>
-					<p class="caption">Figure 7: High Level Hardware Schematic</p>
-				</div>
+        <h3>A. Schematics</h3>
+        <div class="image">
+          <p class = "c1 c25"><a href="webpage_files/schematic_highlevel.jpg"><img src="webpage_files/schematic_highlevel.jpg" alt="" width="600" height="270"></a></p>
+          <p class="caption">Figure 7: High Level Hardware Schematic</p>
+        </div>
 
 				<h3>B. Cost Details</h3>
 				<div dir="ltr">
