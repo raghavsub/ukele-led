@@ -212,8 +212,13 @@
         </p>
 				<p><strong>Real-time LED Driving</strong></p>
         <p>
-          We use the timer3 ISR to drive the song. When the ISR fires, it first checks if <code>go == 2</code>, signifying whether it is in play mode or not. If it is not in play mode, then all the ISR does is set 
+          We use the timer3 ISR to drive the song. The way it does this is by setting <code>chord_idx</code> to an index into our array in <code>chord_lookup_table.h</code>, which is a multidimensional array in which each index contains another array that the driver reads in order to set the LEDs to light up a specific chord. When the ISR fires, it first checks which mode the program is in.
+
+          If it is not in play mode and <code>go == 0</code> then it should be in idle mode, so in this case all the ISR does is set <code>chord_idx = 0</code>, which makes sure none of the LEDs are on since index 0 is the index for the "play nothing" chord. If <code>go == 1</code> then it is in practice mode <code>chord_idx</code> is already set to the correct value, so the ISR is a no-op.
         </p>  
+        <p>
+          If <code>go == 2</code>, then it is in play mode, which means it is time to transition the LEDs. It checks if <code>count < time_sig</code>, if so we are in the count-in phase so we set <code>chord_idx</code> to a special 
+        </p>
 
         <p><strong>TRT and Scheduling</strong></p>
 				<p><strong>Chord Lookup Table Generation</strong></p>
