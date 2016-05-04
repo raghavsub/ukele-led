@@ -1,0 +1,593 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0095)http://people.ece.cornell.edu/land/courses/ece4760/FinalProjects/s2011/pss83/Website/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta http-equiv="Content-Language" content="en-us">
+<title>ECE 4760</title>
+<link rel="stylesheet" type="text/css" media="all" href="webpage_files/cornell_main.css">
+<link rel="stylesheet" type="text/css" media="all" href="webpage_files/cornell_1column.css">
+<link rel="stylesheet" type="text/css" media="all" href="webpage_files/main.css">
+<meta name="author" content="Raghav Subramaniam, Jeff Tian">
+<meta name="copyright" content="Copyright (c) 2014 Raghav Subramaniam, Jeff Tian">
+<meta name="description" content="ECE 4760 Final Project: ukule-LED">
+<meta name="keywords" content="">
+<style type="text/css">
+.c1 {line-height:1.0;direction:ltr}
+.c25 {text-align:center}
+.c0 {height:11pt;direction:ltr}
+.c13 {vertical-align:top;width:69.8pt;border-style:solid;border-color:#000000;border-width:1pt;padding:5pt 5pt 5pt 5pt}
+.c16 {vertical-align:top;width:73.5pt;border-style:solid;border-color:#000000;border-width:1pt;padding:5pt 5pt 5pt 5pt}
+.c19 {line-height:1.0}
+.c21 {vertical-align:baseline;color:#000000;font-size:11pt;font-style:normal;font-family:"Arial";text-decoration:none}
+.c22 {vertical-align:top;width:213.8pt;border-style:solid;border-color:#000000;border-width:1pt;padding:5pt 5pt 5pt 5pt}
+.c23 {padding-top:0pt;text-align:left;padding-bottom:0pt}
+.c3 {vertical-align:top;width:85.5pt;border-style:solid;border-color:#000000;border-width:1pt;padding:5pt 5pt 5pt 5pt}
+.c33 {vertical-align:top;width:57.8pt;border-style:solid;border-color:#000000;border-width:1pt;padding:5pt 5pt 5pt 5pt}
+.c37 {margin-right:auto;border-collapse:collapse}
+.c38 {text-indent:-0.8pt}
+.c5 {font-weight:bold}
+.c8 {height:26pt}
+.c9 {height:0pt}
+</style></head>
+<body>
+
+<div id="header">
+	<!-- The following div contains the Cornell University logo and search link -->
+	<div id="cu-identity"> 
+		<div id="cu-logo"> 
+			<a href="http://www.ece.cornell.edu/"><img src="webpage_files/cu_logo.gif" alt="Cornell University" width="340" height="75" border="0"></a> 
+		</div> 
+	</div>
+	<div class="linklist"> <a name="top"></a> </div>
+	<!-- The search-form div contains a form that allows the user to search 
+				either pages or people within cornell.edu directly from the banner. -->
+	<div id="search-form">
+		<form action="http://www.cornell.edu/search/" method="get" enctype="application/x-www-form-urlencoded">
+			<div id="search-input">
+				<label for="search-form-query">SEARCH:</label>
+				<input type="text" id="search-form-query" name="q" value="" size="20">
+				<input type="submit" id="search-form-submit" name="submit" value="go">
+			</div>
+			<div id="search-filters">
+				<input type="radio" id="search-filters1" name="tab" value="" checked="checked">
+				<label for="search-filters1">Pages</label>
+				<input type="radio" id="search-filters2" name="tab" value="people">
+				<label for="search-filters2">People</label>
+				<a href="http://www.cornell.edu/search/">more options</a>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="mainnav">
+	<ul>
+		<li><a href="#design">High&nbsp;Level&nbsp;Design</a></li>
+		<li><a href="#software">Software</a></li>
+		<li><a href="#hardware">Hardware</a></li>
+		<li><a href="#results">Results</a></li>
+		<li><a href="#conclusions">Conclusions</a></li>
+		<li><a href="#appendices">Appendices</a></li>
+	</ul>
+</div>
+<!-- end mainnav -->
+<!-- end header -->
+<div id="sectiontitle">
+	<h4><a href="http://people.ece.cornell.edu/land/courses/ece4760/">ECE 4760</a>: <a href="http://people.ece.cornell.edu/land/courses/ece4760/FinalProjects/">Final Project</a></h4>
+	<h1>ukule-LED</h1>
+	<h2>&nbsp;</h2>
+	<h3>Raghav Subramaniam (<a href="mailto:ras578@cornell.edu">ras578@cornell.edu)</a></h3>
+	<h3>Jeff Tian (<a href="mailto:yt336@cornell.edu">yt336@cornell.edu</a>)</h3>
+</div>
+<div id="wrapper">
+	<div id="content">
+		<div id="maincontent" class="hub">
+		
+			<div id="introblurb">
+
+				<div class="image">
+					<p class="c1 c25"><img src="webpage_files/banner.jpg" width="740" height="315"></p>
+					<p class="caption">Figure 1: Obligatory Glamor Shot</p>
+				</div>
+
+				<div id="pullquote">
+					<p class="quote">"A modified ukulele that uses lights to teach you how to play chords and songs."</p>
+					<p class="source">project soundbyte</p>
+				</div>
+
+				<p>ukule-LED is a ukulele with LEDs embedded in its fretboard. These LEDs can light up in configurations corresponding to different chords, which can aid the ukulele player in learning how to play certain chords, or can act as a chord reference for a more advanced player. ukule-LED has two modes of operations. First, in "play" mode, the user can feed the system a song file, a text file that contains the tempo, time signature, and an ordered listing of the chords in a song. The ukulele will light up the correct chords at the correct times in the song. In "practice" mode, the user can specify a single chord, which is lit up indefinitely.</p>
+
+        <p>ukule-LED is made up of two major components. First is the ukulele itself. We use sixteen RGB LEDs, embedded in the fretboard before the first four frets on each string. These LEDs are wired to a microcontroller, which is mounted on the ukulele itself. The ukulele is wired to a PC, which runs a companion program with a command line interface. From this interface, the user can put the device in "play" mode and specify a path to a song file, or put the device in "practice" mode and specify a chord name.</p>
+
+				<br>
+
+			</div>
+			
+			<div class="linklist"><a name="design"></a>
+				<h2>High Level Design &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+        <div class="image">
+          <p class = "c1 c25"><img src="webpage_files/overview.jpg" alt="" width="500" height="300"></a></p>
+          <p class="caption">Figure 2: High Level Project Structure</p>
+        </div>
+				
+				<p dir="ltr"><strong>Inspiration and Rationale</strong></p>
+
+				<p>Our inspiration for this project comes from a variety of sources. Our idea to upgrade a musical instrument using LEDs comes from various Hackaday articles, including <a href="http://hackaday.com/2014/08/26/gemma-powered-neopixel-sound-reactive-drums/">this</a> one. We considered using LEDs to augment a couple of other instruments, including a keyboard and a guitar, before settling on a ukulele. We were also inspired by the popular <a href="http://en.wikipedia.org/wiki/Guitar_Hero">Guitar Hero</a> video game series.</p>
+        <p>We believe that musical education is an essential part of the human experience, and we were looking at ways in which the experience of learning to play an instrument could be improved. One thing we noticed is that a difficult part of the learning process for beginners is to memorize all of the different finger positions corresponding to the various chords of their respective instruments.</p>
+        <p>Our project is an attempt to make this learning process as easy as possible. We chose to build this project on the ukulele because it is a comparatively small and simple instrument, but in practice our project concept can be extended to many other instruments such as violin, guitar, piano, etc. By using lights to indicate which strings need to be held down for different chords, users can learn the ukulele much more easily, without having to constantly reference and search through chord reference sheets or trying to memorize all of them at once. </p>
+
+				<p dir="ltr"><strong>Math</strong></p>
+
+        <p>Our project required precise real-time timing to make sure the right chords were displayed on the LEDs according to the tempo specified by the user. The main math involved was in setting the ISR to fire at the correct intervals to transition between chords in a song based on the tempo in beats per minute provided in the song file. 
+          </p><p>
+          We used the timer 3 ISR to do the timming for the song. We set the prescalar to 256, which means that the clock ticks once every <code>256/16000000</code> seconds. Thus, we have <code>256/16000000 = 62500</code> ticks per second. The user provides the <code>tempo</code> in beats per minute (bpm), so to convert this into a value OCR3A we calculated: <code>(1 min/tempo beats) * (60 sec/min) * (62500 ticks/sec)</code> and then subtracted 1 from this value because according to the datasheet the microcontroller uses <code>TOP+1</code> as its top trigger value for the clock ISR. </p><p>Thus we obtain our formula: <code>period = (62500 * 60) / tempo - 1</code>. So whenever the user specifies a <code>tempo</code>, we apply this formula and set OCR3A to the result.
+        </p>
+				<p dir="ltr"><strong>Logical Structure</strong></p>
+        <p>On a high level, the user will input a command using our command line interface running on their desktop or laptop computer, which we wrote using Python. The user can specify a single chord to play, or a song file to play according to some tempo. The Python end then parses the command and song file, and sends it over serial communication to the microcontroller using a data serialization encoding what we developed.
+        </p>
+        <p>
+          On the MCU side of things, we run two real-time tasks using TRT. One of them listens on <code>STDIN</code> for the user to input a new command on the CLI. When a command does arrive, it proceeds to determine which of the two modes was specified by the user, practice mode or play mode. In practice mode, the LEDs for a single chord are held on indefinitely, until the user specifies a different chord in practice mode or switches to play mode. In play mode, the microcontroller plays the song from a song file by lighting the LEDs corresponding to the song chords sequentially according to the chord duration provided in the song file. Depending on which mode is expected, this task will deserialize the rest of the data accordingly. In particular the command is for play mode then the task parses and interprets the serialized version of the song, stores it into local memory, and sets up the ISR according to the required tempo.
+        </p>
+        <p>
+          After the aforementioned task parses the serialized input and sets everything up, the ISR will fire periodically and every time it will increment a pointer into a song array which indicates which cord is the one that should currently be played. Another real-time task constantly polls this pointer value and drives the LEDs according to the pattern corresponding to the current chord.
+        </p>
+				<p dir="ltr"><strong>Hardware Tradeoffs</strong></p>
+        <p>The main hardware tradeoff was deciding whether to drive all of the lights in series or in parallel (for example four LEDs per port). The benefits to putting the LEDs in parallel would have been that there would be more voltage available to power each LED, and that a broken connection early in the line would not cause the failure of all subsequent LEDs. </p><p>We decided to use the series method for a few different reasons. First, it maximizes simplicity of our code and compatibility with driver, which assumes all LEDs connected in serial connected to a single port. Next, we found that one port offered sufficient power to drive all sixteen LEDs in series without any noticible drop in brightness. Finally, we decided that our soldering job seemed pretty stable and that connecting the lights in parallel to multiple ports would introduce too many new wires and disrupt the aesthetics and user experience for the project.</p>
+
+				<p dir="ltr"><strong>Software Tradeoffs</strong></p>
+        <p>
+          In terms of software, a big problem we ran into initially was driving the lights. The lights are driven by a very precisely timed pwm wave. We at first attempted to generate this pwm signal ourselves using the same technique as in lab 2, but we soon realized that the timing specifications were too precise and our MCU could not meet them. Following the specifications of WS2812 Datasheet linked in the References section, the various overflow thresholds would need to be changed every few hundred nanoseconds or so, which would almost surely been impossible to do from a standalone C program let alone one running in conjunction with the time overheads caused by TRT and context switching. The reference article linked along with Alan Burlison's WS2811 Driver explains in detail the virtual infeasibility of this task using C code running on a 16MHz AVR. </p><p>After realizing this and doing some research, we found Burlison's WS2811 Driver, which achieves the strict specifications using very precise pulse-timing no-op delays in assembly. Utilizing this driver, we were able to successfully drive the LEDs and move onto the next phase of the project.
+        </p>
+
+        <p dir="ltr"><strong>Pictures</strong></p>
+
+        <div class="image">
+					<p class = "c1 c25"><img src="webpage_files/major_play.jpg" alt="" width="420" height="312"></a></p>
+					<p class="caption">Figure 3: ukule-LED in Use: Major Chords are Green</p>
+				</div>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/minor.jpg" alt="" width="437" height="291"></a></p>
+					<p class="caption">Figure 4: Minor Chords are Red</p>
+				</div>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/seventh.jpg" alt="" width="437" height="291"></a></p>
+					<p class="caption">Figure 5: Seventh Chords are Blue</p>
+				</div>
+
+			</div>
+		 
+			<div class="linklist"> <a name="software"></a>
+				<h2>Software Design &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/software.jpg" alt="" width="500" height="350"></a></p>
+					<p class="caption">Figure 6: Program Overview (Functions in dashed boxes represent real-time tasks)</p>
+				</div>
+        <p><strong>Command Line Interface</strong></p>
+        <p>
+          To interact with the microcontroller, our project requires a desktop or laptop running Python. On this side, our user interface is a simple command line interface. There are two command formats it can take: <code>ukule_led practice "chord" port "portname"</code> and <code>ukule_led play "file" port "portname"</code>. <p>The first command type tells the microcontroller to go into practice mode. The arguments for this mode are "chord", which is the chord to be played (for example "A", "C#m", "Gb7", etc), and the other argument is "portname", which is the port on the computer which is connected through USB serial cable to the microcontroller.</p><p> The second command type tells the microcontroller to go into play mode. The arguments are "file" which specifies the path to the song file on the local OS, and "port" which is serves the same function as previously described.
+        </p>
+        </p> <p>
+          To implement this functionality we used the python library docopt, which allows us to easily define different command types, sanity check the user's command line input, and parse the command line arguments.
+        </p> 
+				<p><strong>Music File</strong></p>
+				<p>
+          If the user specifies play mode, the user specifies a file on the local file system which encodes a song according to a format we designed. Below is an example of a song file:</p><p>
+          <code>240 4<br>
+          |A B C D|E F G -|A - - B|<br>
+          |A - Bbm A7|Bm X A#7 -|A - X D|</code>
+				</p>
+        <p>
+          So the first line of the song file contains two numbers. The first number (240 in the example) represents the tempo the song should be played in, in terms of beats per minute (bpm). The range we currently support is any number between 60 and 240 bpm. The next number represents the beats per measure of the song's time signature (4 in the example). Note that usually chords are strummed for equal durations throughout most ukulele songs, but to specify something like quarter vs half notes all that is needed is to set the tempo so that a beat is equal to the length of the smallest desired note length, and write longer notes as shorter notes that are held over more beats. 
+        </p>
+        <p>
+          The next lines all contain measures of the song, each measure should be delimited by a | symbol and contain a number of chords equal to the number of beats per measure specified, each chord corresponds to one measure. There can be an arbitrary number of measures, broken up into however many lines the user wants. We support major, minor, and seventh chords, on the standard octave along with sharps and flats. A - signifies to hold a previous chord on for another beat, and an X means no chord should be displayed.
+        </p>
+				<p><strong>File Parsing and Serial Transmission</strong></p>
+        <p>When the Python script receives a command from the user, it uses docopt to parse the command arguments and determines the command. We serialize our command and data using a string of numbers delimited by the / character. To parse the song file, the script uses the standard IO library built in for Python to read the file, and the string library to do sanity checks and extract the file contents into memory. We developed an encoding that assigns each chord a unique number starting from 1, and the script scans over the chords in the song file and converts them to the numbers based on a map we provide. 0 is special and is assigned to <code>X</code>, the "play nothing" chord. </p><p>The data is then converted into a string so that it can be serialized and sent over the serial connection. An example string we might send to put the program in practice mode is <code>"1/17"</code>, and an example string for play mode is <code>"2/200/4/14/13/02/30/-1"</code>. The first number sent is a flag to denote practice mode (1), or play mode (2). Practice mode is simple, the only information after the "1" needed is the number for the single chord to be held on. </p>
+
+        <p>For play mode, after the leading "2" the second number provided is the tempo, and third is the beats per measure, which are 200 and 4 in the example respectively. The next numbers represent the chords of the song in sequential order. There are indefinitely many of them, and the list is terminated by a -1. Using Pyserial, the script then opens a connection to the port provided as a command line argument by the user, and writes the serialized string to the port.</p>
+        <p><strong>Initialization</strong></p>
+        <p>
+          On the MCU side of things, we start of with a <code>main(void)</code> function that runs once to initialize everything when the program first starts. First, it sets up the Neopixel driver by registering portA to be the port it will communicate over and setting the data direction DDRA of the port to output. Next, it sets up timer3 as the timer that drives the timed transitions between chords by setting the prescalar to 256, setting a default value to OCR3A which will be overwritten later, and enabling the timer3 interrupt.</p>
+        <p>
+          Next, it does the setup for TRT, by initializing it, setting up standard in and out, allocating space for the idle task stack, and setting up the two standard semaphores <code>SEM_RX_ISR_SIGNAL</code> and <code>SEM_STRING_DONE</code> which allow for tasks running on TRT to receive from standard input. It then creates our two real-time tasks on TRT, after which it enables sleeping and goes into an infinite sleep loop because it will not be needed again.
+        </p>  
+				<p><strong>Receiving From Serial Port</strong></p>
+        <p>
+          Our first real time task is responsible for waiting for using input to come in over serial, and parsing it when it does come in. It allocates a command buffer of size 1000 bytes (long enough to accomodate most reasonable songs) and calls <code>gets(cmd)</code> and then waits on the <code>SEM_STRING_DONE</code> semaphore, which will be signalled when TRT receives input from <code>stdin</code>. 
+        </p>  
+        <p>
+          When it comes out of waiting, it will have a command buffered in <code>cmd</code>. It then checks if the <code>go</code> flag does not equal 2 and proceeds if so, else it ignores the new command. The <code>go</code> flag indicates which mode it is currently in (0 for idle, 1 for practice, 2 for play). So while in play mode new commands are ignored, but they are accepted otherwise. After receiving the command which is the serialized string of the form described previously, the first thing the function does is to check whether the first number in the string is a 1 or a 2. 
+        </p>  
+        <p>
+          If the first number is 1 (it converts portions of the command string to numbers by copying the portions out to a local buffer and calling <code>atoi</code> on it), then it sets <code>chord_idx</code> to the second number in the array, which is the number corresponding to the single chord to light up. <code>chord_idx</code> is a global variable whose value is always the number associated with the chord that should be displayed on the LEDs at the current time. So in play mode, <code>chord_idx</code> is set to a single chord for indefinitely long, until it is changed by another user command. 
+        </p>
+        <p>
+          Otherwise if the first number is 2, then it has to parse a song file and go into play mode. It reads out the second number in the <code>cmd</code> array, which is the tempo in bpm of the song. It does bounds checking on this tempo, since we only support the range <code>60-240 bpm</code> it rounds values outside this range to their closest values within range. Next, it takes the <code>tempo</code> value and runs the formula for converting this to a clock period described in the Math section, and sets OCR3A to the resulting period. Next it extracts the third number which is the beats per measure, and saves the value in the global variable <code>time_sig</code>, which it uses to do a count-in to prepare the user for the tempo.
+        </p>  <p>
+          Next comes extracting the song, which is done by calling the helper function <code>strToSong</code> on the rest of the <code>cmd</code> array. This function walks through the <code>cmd</code> array number by number, converts them to ints, and inserts them into a global <code>song</code> array of ints. This array now contains the numbers for all chords in the song in order. Finally, when this subroutine finishes the real-time process sets <code>count = 0</code> (which is used to track of the count-in), <code>song_idx = 0</code> and <code>go = 2</code>, and goes back to waitng for the next command.
+        </p>
+				<p><strong>Real-time LED Driving</strong></p>
+        <p>
+          We use the timer3 ISR to drive the song. The way it does this is by setting <code>chord_idx</code> to an index into our array in <code>chord_lookup_table.h</code>, which is a multidimensional array in which each index contains another array that the driver reads in order to set the LEDs to light up a specific chord. When the ISR fires, it first checks which mode the program is in.
+
+          If it is not in play mode and <code>go == 0</code> then it should be in idle mode, so in this case all the ISR does is set <code>chord_idx = 0</code>, which makes sure none of the LEDs are on since index 0 is the index for the "play nothing" chord. If <code>go == 1</code> then it is in practice mode <code>chord_idx</code> is already set to the correct value, so the ISR is a no-op.
+        </p>  
+        <p>
+          If <code>go == 2</code>, then it is in play mode, which means it is time to transition the LEDs. It checks if <code>count < time_sig</code>, if so we are in the count-in phase so we set <code>chord_idx</code> to one of the special indicies in our chord lookup table that each lights a different single LED white at a time, to do a count-in before the song to get the user ready for the tempo to expect. It then increments <code>count</code>, this happens until <code>count == time_sig</code> so the length of the count-in is the number of beats per measure.
+        </p>
+        <p>
+          If the count-in is done, then it sets <code>chord_idx = song[song_idx]</code>, so the current chord to be played is the index into the song array corresponding to <code>song_idx</code>, our current position we have advanced to in the song array so far. If the song is done then it will find that <code>song_idx == -1</code> which is our terminating flag, in which case it will set <code>go</code> and <code>chord_idx</code> back to 0. Finally, it increments <code>song_idx</code> to advance our position in the song.
+        </p>  
+        <p>
+          Our second real-time task simply polls the <code>song_idx</code> value set by the ISR and uses it to drive the LEDs by feeding it to the driver. It takes <code>lookup_table[chord_idx]</code> and feeds it into the LED, since <code>chord_idx</code> is the number associated with the chord to be played such that the <code>lookup_table</code> at <code>chord_idx</code> contains the array that the driver can read to drive the LEDs to light up the lights associated with that chord. 
+        </p>  
+
+        <p><strong>TRT and Scheduling</strong></p>
+        <p>
+          Our first real-time task does not need to be rescheduled with new deadlines each time since it spends almost all of its time blocking on the semaphore waiting for user input to come in. Our second real-time task is scheduled to every <code>0.01</code> seconds, which guarantees that whenever <code>chord_idx</code> changes it is reflected in the LEDs almost immediately within a timeframe such that the delay is inperceptible to users. Using TRT greatly improved our software structure as it allowed us to break up the tasks we needed into modular components that are easy to think about and modify independently of each other, and allows one process to wait on user input while the other can keep running (as opposed to a single task that drives the LEDs and also periodically polls for user input simultaneously which is less efficient due to polling and can get very messy).
+        </p>
+				<p><strong>Chord Lookup Table Generation</strong></p>
+        <p>
+          Our <code>chord_lookup_table.h</code> contains at every index an array which tells the driver how to drive the LEDs for a given chord. These arrays would be very tedious to write by hand, since they are large and there are many chords which each require a seperate array. To simplify this process, we wrote a Python script <code>generate_header.py</code> which, given the finger positions on the four strings and a color, automatically generates the required array. A user can use this script or a similar script to help extend the functionality of the project to easily add more chords that are not currently supported. However, the implementation details of the script are not essential to the projecct.
+        </p>
+
+			</div>
+
+			<div class="linklist"> <a name="hardware"></a>
+				<h2>Hardware Design&nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+				<p>Our electronic components included an ATmega1284P microcontroller mounted on a custom PCB and 16 WS2812B RGB LEDs. These were soldered to a small solder board, along with various resistors, capacitors, jumper wires, and 6 header pins for connecting to a USB serial cable.</p>
+
+				<p><strong>ATmega1284P Microcontroller</strong></p>
+
+				<p>We decided to use the 1284P because we needed to use two 16-bit timers for our project. One was used by TRT, and the other was used for the timing of songs.</p>
+
+				<p>The 1284P was also the most convenient choice. We already had a custom PCB built, which included all of the necessary power circuits. We also avoided having to learn a new microcontroller datasheet.</p>
+
+				<p><strong>WS2812B RGB LEDs</strong></p>
+
+				<p>We used Adafruit's NeoPixel Mini PCBs, each of which includes a WS2812B RGB LED and the necessary capacitor, as given in the WS2812 datasheet. We decided to use the PCBs instead of directly directly using WS2812B LEDs to make soldering easier.</p>
+
+				<p>All of the RGB LEDs are driven from a single microcontroller I/O pin, PORTA0. As per the datasheet, they were all connected in series, with the Dout, 5V, and gnd pads of one wired to the Din, 5V, and gnd pads of the next. The Din pin of the first LED is connected to PORTA.0 on the microcontroller through a 330 ohm resistor to protect the first LED from any voltage spike, and the Dout pin of the last LED is not connected to anything. There is a 100 uF capacitor between the 5V and gnd lines, used to prevent large inrush currents from destroying the first LED.</p>
+
+				<p>Soldering the RGB LEDs together is the most challenging part of building the ukule-LED hardware. There should be four groups of four NeoPixel PCBs. The Din, Dout, 5V, and gnd pins of each group need to connected as described in the previous paragraph. We used very short lengths of wire, soldered to the pads on the NeoPixel PCBs, such that there was about 1-2 mm of space between each PCB. Next, these four groups need to be wired together. We used 3 approximately 4 cm lengths of wire to connect these. Finally, all 16 NeoPixel PCBs were to be hooked to the solder board with 3 approximately 50 cm lengths of wire.
+
+				<p><strong>Serial Connection</strong></p>
+
+				<p>We used a USB serial cable to enable communication between the host PC and the microcontroller's USART. The user specifies a song file path, then the Python CLI converts this file into a string and sends it through the cable to the microcontroller.</p>
+
+				<p><strong>Power</strong></p>
+
+				<p>According to the <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/power">power</a> section of the Adafruit NeoPixel Überguide, each RGB LED driven at maximum brightness consumes 60 mA of current, resulting in a total current draw of 960 mA for 24 RGB LEDs. However, we drove a maximum of 4 LEDs at a time, with the macro <code>INTENS</code> to 20, out of a maximum value of 256. A back-of-the-envelope calculation gives approximately 18.75 mA of current, which is well below the absolute maximum DC current of 40 mA for a microcontroller pin, given in the microcontroller's datasheet. As such, we decided that we could drive the RGB LEDs using the microcontroller's VCC line, instead of resorting to an external power source as the Überguide suggested. We had no trouble with this.</p>
+
+				<p>We were able to use a single 9V power supply for all of our power needs. We decided against using a 9V battery because the system has to be tethered to a computer with a USB serial cable anyways, and another cable coming out of the system is not a major inconvenience at that point.</p>
+
+				<p><strong>Ukulele</strong></p>
+
+				<p>To prepare the ukulele for our project, we had to dremel out the fretboard up to the fourth fret in to accomodate the RGB LEDs. We also had to keep all the frets intact and keep the LEDs below the frets in order to maintain playability of the ukulele. We considered using epoxy to make the fretboard above the LEDs smooth, but we were worried that we wouldn't be able to keep the epoxy contained.</p>
+
+				<p>We hot glued four sets of four LED to the dremeled grooves in the fretboard. We also hot glued the microcontroller and the solder board to the end of the ukulele opposite the fretboard, as shown in Figure 7. Overall, we didn't add too much mass to the ukulele.</p>
+
+				<div class="image">
+					<p class = "c1 c25"><img src="webpage_files/electronics.jpg" alt="" width="436" height="291"></a></p>
+					<p class="caption">Figure 7: The Microcontroller Board and the Solder Board</p>
+				</div>
+				
+			</div>
+			
+			<div class="linklist"> <a name="results"></a>
+				<h2>Results &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+				<p dir="ltr"><strong>Speed and Accuracy</strong></p>
+
+				<p>In play mode, the system supports songs with tempos between 60 and 240 bpm. We feel that this range is enough for the vast majority of songs. These tempos are converted to timer periods by the formula <code>period = (62500 * 60) / tempo - 1</code>. This means the tempo resolution around 60 bpm is about 0.001 bpm and the tempo resolution around 240 bpm is about 0.015 bpm. This exceeds our needs.</p>
+
+				<p>However, when the user starts a new song (in play mode) or selects a new chord (in practice mode), there is a delay. This happens because we have to first send a string to the microcontroller through the USART and then preprocess the string before the LEDs corresponding to the chords in the song can be lit up. This delay is about one second long. This isn't an issue in practice mode, and thanks to the count-in we implemented, isn't a large issue in play mode.</p>
+
+				<p dir="ltr"><strong>Testing</strong></p>
+
+				<p>We tested our ukulele primaily by feeding it sample song files and ensuring that the behavior was correct. We included a variety of chords: major, minor, and seventh chords, and made sure the correct LEDs were lit up and with the correct colors. We also ensured that, when no chord was specified in the current time in the song, that no LEDs were lit. We tried different time signatures to make sure the count-in mechanism worked. We also tested practice mode by feeding the system a variety of chords. Finally, we made sure that the system did not need to be power cycled during use. We tried using the device in play mode twice in a row, practice mode twice in a row, and tried to switch modes.</p>
+
+				<p>Soldering together the RGB LEDs was difficult, and the connections were prone to breakage if the LEDs were jostled. In addition, all of the LEDs were in series, so breakage of one wire would disconnect all successive LEDs. We therefore had to test the connection every time we physically adjusted the LEDs. This was especially important before we glued the LEDs into their places within the ukulele fretboard.</p>
+
+				<p dir="ltr"><strong>Safety</strong></p>
+
+				<p>There are not many electrical hazards in our system. We use a single 9V power supply, which is not enough voltage to harm someone. We also shielded the exposed portions of the RGB LEDs' data and power lines with a layer of hot glue. As the user's fingers come very close to the LEDs while the system is in use, we used hot glue to shield all of those wires as well. The hot glue also gave our connections some mechanical strength. </p>
+
+				<p>One possible hazard is the fact that there are two cables coming out of ukulele, the power supply cable and the USB serial cable. These may pose a tripping hazard, but we do not think it is a major concern, since the wires can all be disconnected when the system is not in use.</p>
+
+				<p dir="ltr"><strong>Usability</strong></p>
+
+				<p>One of our goals in designing ukule-LED was to detract from the ukulele experience as little as possible. This is what makes it usuable as a ukulele tutor. We did this by first minimizing the mass of the components we used. Next, we tried to arrange the wiring so that it is unobstrusive when the user is holding the ukulele in a playing position.</p>
+
+        <p>We feel that our system is intuitive to use, but we found that ukulele beginners needed to start with practice mode in order figure out finger positions for chords before they could proceed to play mode</p>
+
+        <p dir="ltr"><strong>Extensibility</strong></p>
+
+				<p>ukule-LED can easily be extended. Currently, the system <strong>only</strong> supports major, minor, and 7th chords, where major chords are lit up in green, minor chords in red, and 7th chords in blue. The files <code>chord_map.py</code> and <code>chord_lookup_table.h</code> determine what chords are supported and what colors individual chords light up in. More specifically, <code>chord_map.py</code> maps chord names to their indices, and <code>chord_lookup_table.h</code> maps these indices to LED patterns and colors. By editing these two files, a user can extend the system's functionality. In one possible extension, by adding to both files, a user add support for all types of chords. C#7sus4, anyone? In another possible extension, the user can use LED color to tell the user specifically where to place each finger while playing a chord. For example, a red LED would correspond to the index finger position. There are many directions this project can be taken.</p>
+
+
+      </div>
+
+      <div class="linklist"> <a name="conclusions"></a>
+        <h2>Conclusions &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+				<p>We met all of the specifications we set forth in our project proposal. ukule-LED is capable of showing the user how to play songs with play mode, and is capable of showing the user how to play chords with practice mode. Our user interface is intuitive, and ukule-LED plays similarly to an unmodified ukulele. We built a good product. If given more time, we would implement some of the extensions we discussed in the extensibility section.</p>
+
+				<p dir="ltr"><strong>Standards</strong></p>
+
+				<p>In this project, we utilized serial communication via a USART interface. We used a baud rate of 9600 for data transmission.</p>
+
+        <p dir="ltr"><strong>Intellectual Property Considerations</strong></p>
+
+        <p>A majority of the code in ukule-LED is our own. We used several external sources of code, however. First, we used the TinyRealTime (TRT) kernel, written by Dan Henriksson and Anton Cervin, and modified by Bruce Land. This handled our scheduling. Next, we used trtUart, a library written by Jeorg Wunsch, which allowed us to use TRT and UART communication simultaneously. We also used Alan Burlison's WS2811 RGB LED driver. On the Python side, we used docopt, an open source command line argument parser, to make our command line interface. We also used Chris Liechti's PySerial module to enable serial communications between the PC and the microcontroller.</p>
+
+        <p>Our hardware design is original.</p>
+
+        <p dir="ltr"><strong>Ethical Considerations</strong></p>
+
+        <p>In designing and building ukule-LED, we adhered to the <a href="http://www.ieee.org/about/corporate/governance/p7-8.html">IEEE Code of Ethics</a>.</p>
+
+        <p>We made decisions to ensure the safety of ourselves and of users. We shielded all high-current wires with hot glue, checked diligently for short circuits and other electrical hazards, and made all cables detachable to minimize tripping hazards. When working with potentially dangerous lab equipment such as the soldering iron, the hot glue gun, and the Dremel, we made sure to use the tools following the proper procedures and safety precautions. In terms of safety, we always wore goggles when soldering, and wearing both goggles and respiratory mask when using the Dremel.</p>
+
+        <p>We were careful to avoid damage to lab equipment and to others' projects. We also complied with the rules and regulations of the lab. We kept our lab station clean after use with the next group in mind.</p>
+
+        <p>We honestly accepted criticism for our work, in the form of our proposal review and debugging help from the course TAs and instructor. We also thoroughly acknowledged our sources and inspirations, including the libraries and drivers that made our work much simpler. We also assisted our fellow students in the course by providing honest criticism if asked, but we stayed well within the limits outlined in the Cornell University Code of Academic Integrity.</p>
+
+        <p dir="ltr"><strong>Legal Considerations</strong></p>
+
+        <p>As far as we know, there are no legal complications associated with ukule-LED.</p>
+
+      </div>
+
+
+      <h2>Appendices &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+        <h3>A. Schematics</h3>
+        <div class="image">
+          <p class = "c1 c25"><a href="webpage_files/schematic_highlevel.jpg"><img src="webpage_files/schematic_highlevel.jpg" alt="" width="600" height="270"></a></p>
+          <p class="caption">Figure 8: High Level Hardware Schematic</p>
+        </div>
+
+				<h3>B. Cost Details</h3>
+				<div dir="ltr">
+					<table width="769" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr class="c9">
+								<td width="303" class="c22"><p class="c1"><span class="c5">Part Number</span></p></td>
+								<td width="111" class="c13"><p class="c23 c1"><span class="c5">Vendor</span></p></td>
+								<td width="95" class="c33"><p class="c23 c1"><span class="c5">Quantity</span></p></td>
+								<td width="132" class="c3"><p class="c1"><span class="c5">Price</span></p></td>
+								<td width="116" class="c16"><p class="c23 c1"><span class="c5">Total Cost</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>ATmega1284P</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$5</span></p></td>
+								<td class="c16"><p class="c1"><span>$5.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Melokia UK13 13" Soprano Ukulele</span></p></td>
+								<td class="c13"><p class="c1 c38"><span>Amazon</span></p></td>
+								<td class="c33"><p class="c1 c38"><span>1</span></p></td>
+								<td class="c3"><p class="c1 c38"><span>$23.99 </span></p></td>
+								<td class="c16"><p class="c1 c38"><span>$23.99</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>NeoPixel Mini PCB - Pack of 5</span></p></td>
+								<td class="c13"><p class="c1"><span>Adafruit</span></p></td>
+								<td class="c33"><p class="c1"><span>4</span></p></td>
+								<td class="c3"><p class="c1"><span>$4.95</span></p></td>
+								<td class="c16"><p class="c1"><span>$19.80</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Small Solder Board</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$1.00</span></p></td>
+								<td class="c16"><p class="c1"><span>$1.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Custom PCB</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$4</span></p></td>
+								<td class="c16"><p class="c1"><span>$4.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Header Pins</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>20</span></p></td>
+								<td class="c3"><p class="c1"><span>$0.05 </span></p></td>
+								<td class="c16"><p class="c1"><span>$1.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Capacitors</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$0</span></p></td>
+								<td class="c16"><p class="c1"><span>$0.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span>Resistors</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$0</span></p></td>
+								<td class="c16"><p class="c1"><span>$0.00</span></p></td>
+							</tr>
+							<tr class="c8">
+								<td class="c22"><p class="c1"><span>12V Power Supply</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$5</span></p></td>
+								<td class="c16"><p class="c1"><span>$5.00</span></p></td>
+							</tr>
+							<tr class="c8">
+								<td class="c22"><p class="c1"><span>USB Serial Cable</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>1</span></p></td>
+								<td class="c3"><p class="c1"><span>$7</span></p></td>
+								<td class="c16"><p class="c1"><span>$7.00</span></p></td>
+							</tr>
+							<tr class="c8">
+								<td class="c22"><p class="c1"><span>Wire</span></p></td>
+								<td class="c13"><p class="c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c1"><span>4&rsquo;</span></p></td>
+								<td class="c3"><p class="c1"><span>$0</span></p></td>
+								<td class="c16"><p class="c1"><span>$0.00</span></p></td>
+							</tr>
+							<tr class="c8">
+								<td class="c22"><p class="c23 c1"><span>Heat Shrink Tubing</span></p></td>
+								<td class="c13"><p class="c23 c1"><span>Lab stock</span></p></td>
+								<td class="c33"><p class="c23 c1"><span>6&rdquo;</span></p></td>
+								<td class="c3"><p class="c23 c1"><span>$0</span></p></td>
+								<td class="c16"><p class="c23 c1"><span>$0.00</span></p></td>
+							</tr>
+							<tr class="c9">
+								<td class="c22"><p class="c1"><span class="c5">Total cost</span></p></td>
+								<td class="c13"><p class="c23 c0 c19"><span class="c21 c5"></span></p></td>
+								<td class="c33"><p class="c23 c0 c19"><span class="c21 c5"></span></p></td>
+								<td class="c3"><p class="c0 c19"><span class="c5"></span></p></td>
+								<td class="c16"><p class="c23 c1"><span class="c5">$66.79</span></p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<h3>C. Distribution of Work</h3>
+				<table width="100%" border="1">
+					<thead>
+						<tr>
+							<th width="50%"><strong>Raghav Subramaniam</strong></th>
+							<th width="50%"><strong>Jeff Tian</strong></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="row1">
+							<td>Overall Hardware Design</td>
+							<td>Overall Softare Design</td>
+						</tr>
+						<tr class="row2">
+							<td>LED and Board Soldering</td>
+							<td>Ukulele Dremeling</td>
+						</tr>
+            <tr class="row1">
+              <td>Song File Format Design</td>
+              <td>Song Parsing Python Frontend</td>
+            </tr>
+            <tr class="row2">
+              <td>C Chord Lookup Table Generation Script</td>
+              <td>Data Transmit Encoding/Decoding</td>
+            </tr>
+            <tr class="row1">
+              <td>Main C Code Implementation</td>
+              <td>Main C Code Implementation</td>
+            </tr>
+            <tr class="row2">
+              <td>Website</td>
+              <td>Website</td>
+            </tr>
+					</tbody>
+				</table>
+
+				<h3>D. Code Listing</h3>
+
+				<div class="group1">
+				  <h4>C</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/ukule-led.c">ukule-led.c</a></li>
+				  	<li><a href="webpage_files/code/trtkernel_1284.c">trtkernel_1284.c</a></li>
+				  	<li><a href="webpage_files/code/trtSettings.h">trtSettings.h</a></li>
+				  	<li><a href="webpage_files/code/chord_lookup_table.h">chord_lookup_table.h</a></li>
+				  </ul>
+				  <h4>Python</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/ukule_led.py">ukule_led.py</a></li>
+				  	<li><a href="webpage_files/code/chord_map.py">chord_map.py</a></li>
+						<li><a href="webpage_files/code/generate_header.py">generate_header.py</a></li>
+				  </ul>
+				  <h4>Other</h3>
+				  <ul>
+				  	<li><a href="webpage_files/code/after_the_gold_rush.txt">"After the Gold Rush"</a></li>
+				  </ul>
+				 </div>
+
+				<div class="linklist"><h2>References &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+
+				  <p style="margin: 0 0 0.5em">This section provides links to external reference documents, code, and websites used throughout the project.</p>
+				  <div class="group1">
+				  	<h3>Datasheets</h3>
+				  	<ul>
+				  		<li><a href="http://people.ece.cornell.edu/land/courses/ece4760/AtmelStuff/mega1284full.pdf">Atmega1284 Datasheet</a></li>
+				  		<li><a href="http://www.adafruit.com/datasheets/WS2812.pdf">WS2812 Datasheet</a></li>
+				  	</ul>
+				  	<h3>References</h3>
+				  	<ul>
+				  		<li><a href="http://learn.adafruit.com/adafruit-neopixel-uberguide">Adafruit NeoPixel Überguide</a></li>
+				  		<li><a href="http://bleaklow.com/2012/12/02/driving_the_ws2811_at_800khz_with_a_16mhz_avr.html">Alan Burlison's WS2811 Driver</a> (<a href="http://sourceforge.net/p/abavr/lib/ci/e3429e3493e08015d94d9237699bf15c085970c7/tree/WS2811/WS2811.h">SourceForge</a>)</li>
+              <li><a href="http://www.control.lth.se/~anton/tinyrealtime/">TinyRealTime Kernel</a></li>
+              <li><a href="http://people.ece.cornell.edu/land/courses/ece4760/TinyRealTime/index.html">TRT for ATmega1284</a></li>
+              <li><a href="http://people.ece.cornell.edu/land/PROJECTS/ProtoBoard476/">Custom PCB for ATmega1284</a></li>
+              <li><a href="http://docopt.org">docopt</a></li>
+              <li><a href="http://pyserial.sourceforge.net/">PySerial</a></li>
+				  	</ul>
+				  	<h3>Vendors</h3>
+				  	<ul>
+				  		<li><a href="http://www.adafruit.com">Adafruit</a></li>
+				  		<li><a href="http://www.amazon.com">Amazon</a></li>
+				  	</ul>
+				  </div>
+        </div>
+
+				<div class="linklist">
+					<h2>Acknowledgements &nbsp;&nbsp;&nbsp;<font size="-1"><strong><a href="#top">top</a></strong></font></h2>
+          <p>We would like to thank Bruce Land for sharing with us his electronics wizardry, and for providing inspiration and debugging insight during lab hours.</p>
+
+          <p>We would also like to thank the course TAs, especially our lab TA, Eileen Liu, who gave us great feedback on our project proposal and weekly updates.</p>
+
+				</div>
+        
+      </div>
+
+           
+			</div>
+		<!-- end maincontent -->
+	</div>
+	<!-- end content -->
+	<script type="text/javascript" async src="webpage_files/ga.js"></script><script type="text/javascript">
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-22818013-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+
+</script>
+	<!-- content out -->
+	<hr>
+	<!-- footer in -->
+	<div id="footerwrap">
+		<div id="footer">
+			<div id="copyright">
+				<div class="copyright">(c) 2014 Raghav Subramaniam &amp; Jeff Tian</div>
+				<div class="copyright">Style adapted with permission from Eileen Liu</div>
+				<div class="copyright">Layout (c) 2010 Cornell University</div>
+			</div>
+		</div>
+		<!-- end footer -->
+	</div>
+	<!-- end footerwrap -->
+	<!-- footer out -->
+</div>
+<!-- end wrapper -->
+
+
+<embed type="application/x-shockwave-flash" width="0" height="0"></div></div><iframe id="rdbIndicator" width="100%" height="270" border="0" src="webpage_files/indicator.html" style="display: none; border: 0; position: fixed; left: 0; top: 0; z-index: 2147483647"></iframe></body></html>
